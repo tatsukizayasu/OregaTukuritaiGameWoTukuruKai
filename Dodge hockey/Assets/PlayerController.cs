@@ -22,6 +22,9 @@ public class Player1 : MonoBehaviour
 
     void Update()
     {
+        Vector3 pos = new Vector3();
+        pos = transform.position;
+
         velocity = Vector3.zero;
 
         var input = new Vector3(Input.GetAxis(horizontalString), 0f, Input.GetAxis(verticalString));
@@ -29,12 +32,8 @@ public class Player1 : MonoBehaviour
         //　方向キーが多少押されている
         if (input.magnitude > 0f)
         {
-            transform.LookAt(transform.position + input);
-
-            velocity += input.normalized * 2f;
-            //　キーの押しが小さすぎる場合は移動しない
-
-            print(velocity);
+            pos += input.normalized * 0.05f;
+            transform.position = pos;
         }
 
     }
