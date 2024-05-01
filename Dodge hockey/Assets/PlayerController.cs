@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Player1 : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     private string horizontalString;
