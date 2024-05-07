@@ -205,7 +205,6 @@ namespace Norikatuo.ReboundShot
                     var inVecDir = direction;
                     var outVecDir = Vector3.Reflect(inVecDir, normal);
                     outVecDir = new Vector3(outVecDir.x, 0.0f, outVecDir.z);
-                    Debug.Log(outVecDir);
                     reboundVelocity = outVecDir * speed * bounciness;
 
                     // Õ“Ë—\’èæ‚ÉÚ‚·‚é‚æ‚¤‚É‘¬“x‚ğ’²®
