@@ -1727,15 +1727,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _action:
     m_Name: Action
-    m_Type: 0
-    m_ExpectedControlType: 
+    m_Type: 1
+    m_ExpectedControlType: Button
     m_Id: d6851fb2-6fb5-496c-9826-d2f1f5ac6a98
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
       m_Id: 4ef611eb-fc24-4bb4-ae37-ab1995aa6ba8
-      m_Path: <Gamepad>/leftStick/x
+      m_Path: <XInputController>/buttonSouth
       m_Interactions: 
       m_Processors: 
       m_Groups: 
@@ -2205,7 +2205,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96e752e75c6e79948a218e4d36fbcffb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentJoysticks: []
 --- !u!1 &1968740852
 GameObject:
   m_ObjectHideFlags: 0
