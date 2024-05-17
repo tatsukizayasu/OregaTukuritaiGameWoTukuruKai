@@ -265,8 +265,8 @@ namespace Norikatuo.ReboundShot
                 }
             }
         }
-    }
+    
 #endif
     #endregion
-
+    }
 }
