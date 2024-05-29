@@ -34,6 +34,10 @@ public class PlayerController : MonoBehaviour
             Collider collider = col.collider;
             Transform parent_transform = collider.transform.parent;
             GameObject parent_object = parent_transform.gameObject;
+
+            col.transform.parent = this.transform;
+            parent_object.GetComponent<Ball_test>().BallCondition = BallCondition_test.stop;
+
             //col.rigidbody.velocity = Vector3.zero;
             Debug.Log("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
            // ball.transform.SetParent(transform);
