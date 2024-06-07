@@ -1,267 +1,147 @@
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-
-//public class Ball : MonoBehaviour
-//{
-//    // Start is called before the first frame update
-//    void Start()
-//    {
-
-//        Rigidbody rb = this.GetComponent<Rigidbody>();  // rigidbody‚ğæ“¾
-//        Vector3 force = new Vector3(0.0f, 0.0f, 5.0f);  // —Í‚ğİ’è
-//        rb.AddForce(force, ForceMode.Impulse);          // —Í‚ğ‰Á‚¦‚é
-//    }
-
-//    // Update is called once per frame
-//    void Update()
-//    {
-
-//    }
-//}
 using UnityEngine;
 
-using System.Collections;
-using UnityEngine;
-
-namespace Norikatuo.ReboundShot
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(SphereCollider))]
+public class Ball_test : MonoBehaviour
 {
-    public enum BallCondition_test
+    [Tooltip("åç™ºä¿‚æ•°")]
+    [Range(0, 2)]
+    [SerializeField] private float bounciness = 1.0f; // åç™ºä¿‚æ•°
+
+    [Tooltip("å¼¾ã®é€Ÿåº¦")]
+    public float speed = 10.0f; // å¼¾ã®é€Ÿåº¦
+
+    [Tooltip("ONãªã‚‰DefaultContactOffsetã®å€¤ã‚’è¡çªæ¤œçŸ¥ã«ä½¿ç”¨ã™ã‚‹")]
+    [SerializeField] private bool useContactOffset = true; // è¡çªæ¤œçŸ¥ã«DefaultContactOffsetã‚’ä½¿ç”¨ã™ã‚‹ã‹ã©ã†ã‹
+
+    //private Rigidbody rigidbody; // Rigidbodyã®å‚ç…§
+    private SphereCollider sphereCollider; // SphereColliderã®å‚ç…§
+    private float defaultContactOffset; // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®æ¥è§¦ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+    private const float sphereCastMargin = 0.01f; // SphereCastç”¨ã®ãƒãƒ¼ã‚¸ãƒ³
+    private Vector3? reboundVelocity; // åå°„é€Ÿåº¦
+    private Vector3 lastDirection; // æœ€å¾Œã®é€²è¡Œæ–¹å‘
+    private bool canKeepSpeed; // é€Ÿåº¦ã‚’ç¶­æŒã§ãã‚‹ã‹ã©ã†ã‹
+
+    public Vector3 CatchBallLocathion; // ã‚­ãƒ£ãƒƒãƒã™ã‚‹ãƒœãƒ¼ãƒ«ã®ä½ç½®
+
+    // å¤–éƒ¨ã‹ã‚‰é€Ÿåº¦ã‚’è¨­å®šã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+    public void SetVelocity(Vector3 vector)
     {
-        stop,
-        Move,
-        CatchInit,
-        Catch,
+        GetComponent<Rigidbody>().velocity = vector * speed;
     }
 
-    [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(SphereCollider))]
-
-
-    public class Ball_test : MonoBehaviour
+    // åˆæœŸåŒ–å‡¦ç†
+    private void Awake()
     {
-        [Tooltip("”½”­ŒW”")]
-        [Range(0, 2)]
-        [SerializeField] private float bounciness = 1.0f;
+        sphereCollider = GetComponent<SphereCollider>(); // SphereColliderã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—
+    }
 
-        [Tooltip("’e‚Ì‘¬“x")]
-        public float speed = 10.0f;
+    // åˆæœŸåŒ–å‡¦ç†ï¼ˆAwakeå¾Œã«å®Ÿè¡Œï¼‰
+    private void Start()
+    {
+        Init();
 
-        [Tooltip("ON‚È‚çDefaultContactOffset‚Ì’l‚ğÕ“ËŒŸ’m‚Ég—p‚·‚é")]
-        [SerializeField] private bool useContactOffset = true;
+        Vector3 debugDirection;
 
-        private Rigidbody rigidbody;
-        private SphereCollider sphereCollider;
-        private float defaultContactOffset;
-        private const float sphereCastMargin = 0.01f; // SphereCast—p‚Ìƒ}[ƒWƒ“
-        private Vector3? reboundVelocity; // ”½Ë‘¬“x
-        private Vector3 lastDirection;
-        private bool canKeepSpeed;
+        // ãƒ‡ãƒãƒƒã‚°ç”¨ã®åˆæœŸæ–¹å‘ã‚’è¨­å®šã—é€Ÿåº¦ã‚’ä¸ãˆã‚‹
+        debugDirection = new Vector3(Mathf.Cos(Mathf.Deg2Rad), Mathf.Sin(Mathf.Deg2Rad), 0f);
+        GetComponent<Rigidbody>().velocity = debugDirection * speed;
+    }
 
-        public Vector3 CatchBallLocathion;
-
-        private BallCondition_test ballCondition = BallCondition_test.stop;
-        public BallCondition_test BallCondition { get { return ballCondition; } set { ballCondition = value; } }   
-
-        public void SetVelocity(Vector3 vector)
+    // åˆæœŸè¨­å®šã‚’è¡Œã†ãƒ¡ã‚½ãƒƒãƒ‰
+    private void Init()
+    {
+        // isTrigger=falseã§ä½¿ç”¨ã™ã‚‹å ´åˆã¯Continuous Dynamicsã«è¨­å®š
+        if (!sphereCollider.isTrigger && GetComponent<Rigidbody>().collisionDetectionMode != CollisionDetectionMode.ContinuousDynamic)
         {
-                    rigidbody.velocity = vector * speed;
+            GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         }
 
-        //Start()‘O‚ÉÀs@RigidbodyESphereCollider‚ğì¬
-        private void Awake()
+        // é‡åŠ›ã®ä½¿ç”¨ã‚’ç¦æ­¢
+        if (GetComponent<Rigidbody>().useGravity)
         {
-            rigidbody = GetComponent<Rigidbody>();
-            sphereCollider = GetComponent<SphereCollider>();
+            GetComponent<Rigidbody>().useGravity = false;
         }
 
-        //Awake()Œã‚ÉÀs
-        //‰‘¬‚ğİ’è
-        private void Start()
+        defaultContactOffset = Physics.defaultContactOffset; // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®æ¥è§¦ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’ä¿å­˜
+        canKeepSpeed = true; // é€Ÿåº¦ã‚’ç¶­æŒå¯èƒ½ã«è¨­å®š
+    }
+
+    // å›ºå®šãƒ•ãƒ¬ãƒ¼ãƒ ã”ã¨ã«å‘¼ã°ã‚Œã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+    private void FixedUpdate()
+    {
+        // å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã§åå°„ã—ã¦ã„ãŸã‚‰åå°„å¾Œé€Ÿåº¦ã‚’åæ˜ 
+        ApplyReboundVelocity();
+
+        // é€²è¡Œæ–¹å‘ã«è¡çªå¯¾è±¡ãŒã‚ã‚‹ã‹ã©ã†ã‹ç¢ºèª
+        ProcessForwardDetection();
+
+        // æ¸›é€Ÿã®åˆ¶é™
+        KeepConstantSpeed();
+
+    }
+
+    /// <summary>
+    /// è¨ˆç®—ã—ãŸåå°„ãƒ™ã‚¯ãƒˆãƒ«ã‚’åæ˜ ã™ã‚‹
+    /// </summary>
+    private void ApplyReboundVelocity()
+    {
+        if (reboundVelocity == null) return;
+
+        GetComponent<Rigidbody>().velocity = reboundVelocity.Value; // åå°„é€Ÿåº¦ã‚’è¨­å®š
+        speed *= bounciness; // é€Ÿåº¦ã«åç™ºä¿‚æ•°ã‚’æ›ã‘ã‚‹
+        reboundVelocity = null; // åå°„é€Ÿåº¦ã‚’ãƒªã‚»ãƒƒãƒˆ
+        canKeepSpeed = true; // é€Ÿåº¦ã‚’ç¶­æŒå¯èƒ½ã«è¨­å®š
+    }
+
+    /// <summary>
+    /// å‰æ–¹æ–¹å‘ã‚’ç›£è¦–ã—ã¦1ãƒ•ãƒ¬ãƒ¼ãƒ å¾Œã«è¡çªã—ã¦ã„ã‚‹å ´åˆã¯åå°„ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—ã™ã‚‹
+    /// </summary>
+    private void ProcessForwardDetection()
+    {
+        var velocity = GetComponent<Rigidbody>().velocity;
+        var direction = velocity.normalized;
+
+        var offset = useContactOffset ? defaultContactOffset * 2 : 0;
+        var origin = transform.position - direction * (sphereCastMargin + offset);
+        var colliderRadius = sphereCollider.radius + offset;
+        var isHit = Physics.SphereCast(origin, colliderRadius, direction, out var hitInfo, velocity.magnitude * Time.fixedDeltaTime);
+
+        if (isHit)
         {
-            Init();
+            var distance = hitInfo.distance - sphereCastMargin;
 
-            Vector3 debugDirection;
+            // æ¬¡ãƒ•ãƒ¬ãƒ¼ãƒ ã«ä½¿ã†åå°„é€Ÿåº¦ã‚’è¨ˆç®—
+            var normal = hitInfo.normal;
+            var inVecDir = direction;
+            var outVecDir = Vector3.Reflect(inVecDir, normal);
+            outVecDir = new Vector3(outVecDir.x, 0.0f, outVecDir.z);
+            reboundVelocity = outVecDir * speed * bounciness;
 
-            debugDirection = new Vector3(Mathf.Cos(Mathf.Deg2Rad), Mathf.Sin(Mathf.Deg2Rad), 0f);
-            rigidbody.velocity = debugDirection * speed;
-
-
+            // è¡çªäºˆå®šå…ˆã«æ¥ã™ã‚‹ã‚ˆã†ã«é€Ÿåº¦ã‚’èª¿æ•´
+            var adjustVelocity = distance / Time.fixedDeltaTime * direction;
+            GetComponent<Rigidbody>().velocity = adjustVelocity;
+            canKeepSpeed = false; // é€Ÿåº¦ã‚’ç¶­æŒã§ããªã„çŠ¶æ…‹ã«è¨­å®š
+            
         }
+    }
 
-        private void Init()
+    /// <summary>
+    /// é€Ÿåº¦ã‚’ä¸€å®šã«ä¿ã¤
+    /// è¡çªã‚„å¼•ã£ã‹ã‹ã‚Šã«ã‚ˆã‚‹æ¸›é€Ÿã‚’ä¸Šæ›¸ãã™ã‚‹å½¹ç›®
+    /// </summary>
+    private void KeepConstantSpeed()
+    {
+        if (!canKeepSpeed) return;
+
+        var velocity = GetComponent<Rigidbody>().velocity;
+        var nowSqrSpeed = velocity.sqrMagnitude;
+        var sqrSpeed = speed * speed;
+
+        if (!Mathf.Approximately(nowSqrSpeed, sqrSpeed))
         {
-            // isTrigger=false ‚Åg—p‚·‚éê‡‚ÍContinuous Dynamics‚Éİ’è
-            if (!sphereCollider.isTrigger && rigidbody.collisionDetectionMode != CollisionDetectionMode.ContinuousDynamic)
-            {
-                rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            }
-
-            // d—Í‚Ìg—p‚Í‹Ö~
-            if (rigidbody.useGravity)
-            {
-                rigidbody.useGravity = false;
-            }
-
-            defaultContactOffset = Physics.defaultContactOffset;
-            canKeepSpeed = true;
+            var dir = velocity != Vector3.zero ? velocity.normalized : lastDirection;
+            GetComponent<Rigidbody>().velocity = dir * speed;
         }
-
-
-        private void FixedUpdate()
-        {
-
-
-
-            switch (ballCondition)
-            {
-                case BallCondition_test.stop:
-                    Debug.Log("stop");
-
-                    rigidbody.velocity = Vector3.zero;
-
-                    if (Input.GetKeyDown(KeyCode.R))
-                    {
-                        ballCondition = BallCondition_test.Move;
-
-                        Vector3 debugDirection;
-                        debugDirection = new Vector3(Mathf.Cos(Mathf.Deg2Rad), Mathf.Sin(Mathf.Deg2Rad), 0f);
-                        rigidbody.velocity = debugDirection * speed;
-                    }
-                    break;
-                case BallCondition_test.Move:
-                    Debug.Log("Move");
-                    // ‘OƒtƒŒ[ƒ€‚Å”½Ë‚µ‚Ä‚¢‚½‚ç”½ËŒã‘¬“x‚ğ”½‰f
-                    ApplyReboundVelocity();
-
-                    // is•ûŒü‚ÉÕ“Ë‘ÎÛ‚ª‚ ‚é‚©‚Ç‚¤‚©Šm”F
-                    ProcessForwardDetection();
-
-                    //Œ¸‘¬‚Ì§ŒÀ
-                    KeepConstantSpeed();
-
-                    if (Input.GetKeyDown(KeyCode.R))
-                    {
-                        ballCondition = BallCondition_test.CatchInit;
-                    }
-
-                    break;
-                case BallCondition_test.CatchInit:
-                    //Debug.Log("CatchInit");
-
-                    //GameObject obj = GameObject.Find("Player1");
-                    //if (obj == null)
-                    //{
-                    //    Debug.LogError("Player1 ƒIƒuƒWƒFƒNƒg‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½");
-                    //    break;
-                    //}
-                    //Vector3 locathion = obj.transform.position;
-                    //locathion.x += 10f;
-
-                    //CatchBallLocathion = locathion;
-
-                    ballCondition = BallCondition_test.Catch;
-
-                    break;
-                case BallCondition_test.Catch:
-
-                    Debug.Log("CatchInit");
-
-                    GameObject obj = GameObject.Find("Player1");
-                    if (obj == null)
-                    {
-                        Debug.LogError("Player1 ƒIƒuƒWƒFƒNƒg‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½");
-                        break;
-                    }
-                    Vector3 locathion = obj.transform.position;
-                    locathion.x += 10f;
-
-                    CatchBallLocathion = locathion;
-
-
-
-                    Debug.Log("Catch");
-                    Debug.Log(CatchBallLocathion);
-                    this.transform.position = CatchBallLocathion;
-                    rigidbody.velocity = Vector3.zero;
-
-                    if (Input.GetKeyDown(KeyCode.R))
-                    {
-                        ballCondition = BallCondition_test.stop;
-                    }
-                    break;
-                    //this.transform.SetParent
-            }
-
-        }
-
-
-        /// <summary>
-        /// ŒvZ‚µ‚½”½ËƒxƒNƒgƒ‹‚ğ”½‰f‚·‚é
-        /// </summary>
-        private void ApplyReboundVelocity()
-        {
-            if (reboundVelocity == null) return;
-
-            rigidbody.velocity = reboundVelocity.Value;
-            speed *= bounciness;
-            reboundVelocity = null;
-            canKeepSpeed = true;
-        }
-
-        /// <summary>
-        /// ‘O•û•ûŒü‚ğŠÄ‹‚µ‚Ä1ƒtƒŒ[ƒ€Œã‚ÉÕ“Ë‚µ‚Ä‚¢‚éê‡‚Í”½ËƒxƒNƒgƒ‹‚ğŒvZ‚·‚é
-        /// </summary>
-        private void ProcessForwardDetection()
-        {
-            var velocity = rigidbody.velocity;
-            var direction = velocity.normalized;
-
-            var offset = useContactOffset ? defaultContactOffset * 2 : 0;
-            var origin = transform.position - direction * (sphereCastMargin + offset);
-            var colliderRadius = sphereCollider.radius + offset;
-            var isHit = Physics.SphereCast(origin, colliderRadius, direction, out var hitInfo);
-            if (isHit)
-            {
-                var distance = hitInfo.distance - sphereCastMargin;
-                var nextMoveDistance = velocity.magnitude * Time.fixedDeltaTime;
-                if (distance <= nextMoveDistance)
-                {
-                    // ŸƒtƒŒ[ƒ€‚Ég‚¤”½Ë‘¬“x‚ğŒvZ
-                    var normal = hitInfo.normal;
-                    var inVecDir = direction;
-                    var outVecDir = Vector3.Reflect(inVecDir, normal);
-                    outVecDir = new Vector3(outVecDir.x, 0.0f, outVecDir.z);
-                    reboundVelocity = outVecDir * speed * bounciness;
-
-                    // Õ“Ë—\’èæ‚ÉÚ‚·‚é‚æ‚¤‚É‘¬“x‚ğ’²®
-                    var adjustVelocity = distance / Time.fixedDeltaTime * direction;
-                    rigidbody.velocity = adjustVelocity;
-                    canKeepSpeed = false;
-                }
-            }
-        }
-
-        /// <summary>
-        /// ‘¬“x‚ğˆê’è‚É•Û‚Â
-        /// Õ“Ë‚âˆø‚Á‚©‚©‚è‚É‚æ‚éŒ¸‘¬‚ğã‘‚«‚·‚é–ğ–Ú
-        /// </summary>
-        private void KeepConstantSpeed()
-        {
-            if (!canKeepSpeed) return;
-
-            var velocity = rigidbody.velocity;
-            var nowSqrSpeed = velocity.sqrMagnitude;
-            var sqrSpeed = speed * speed;
-
-            if (!Mathf.Approximately(nowSqrSpeed, sqrSpeed))
-            {
-                var dir = velocity != Vector3.zero ? velocity.normalized : lastDirection;
-                rigidbody.velocity = dir * speed;
-            }
-        }
-
-
-
     }
 }

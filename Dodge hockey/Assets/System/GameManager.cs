@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     private GameObject player1;
     private GameObject player2;
-    private Norikatuo.ReboundShot.Ball_test ball;
+    private Ball_test ball;
 
 
     private void Awake()
@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
         player1.transform.position = new Vector3(-12.0f, 1.6f, 0);
         player2.transform.position = new Vector3( 12.0f, 1.6f, 0);
         Instantiate(center_line);
-        ball = (Instantiate (ball_prefab)).GetComponent<Norikatuo.ReboundShot.Ball_test>();
+        ball = (Instantiate (ball_prefab)).GetComponent<Ball_test>();
         
     }
 
