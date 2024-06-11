@@ -26,14 +26,13 @@ public class MyBall : MonoBehaviour
     void Start()
     {
         Init();
-        GetComponent<Rigidbody>().velocity = new Vector3(1.0f, 0.0f, 0.0f);
+        GetComponent<Rigidbody>().velocity = new Vector3(1.0f, 0.0f, 0.0f) * 10;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         DetectCollision();
-
 
         oldPosition = transform.position;
     }
@@ -52,35 +51,39 @@ public class MyBall : MonoBehaviour
         transform.position = new Vector3(0.0f, 1.5f, 0.0f);
         oldPosition = transform.position;
         rigitBody.constraints |= RigidbodyConstraints.FreezePositionY;
+
+        //  自身を無視するようにLayerに自身を追加する
+        gameObject.layer = LayerMask.NameToLayer("SphereMoveLayer");
     }
 
     private void DetectCollision()
     {
         Vector3 sphereCenter = transform.position;
+        Vector3 velocity = GetComponent<Rigidbody>().velocity;
+        float maxDistance = velocity.magnitude * (Time.fixedDeltaTime * 2);
+        LayerMask ignoreLayer = gameObject.layer;
 
         // OverlapSphereを使用して範囲内のすべてのコライダーを取得
-        Collider[] hitColliders = Physics.OverlapSphere(sphereCenter,sphereCollider.radius);
+        Collider[] hitColliders = Physics.OverlapSphere(sphereCenter,sphereCollider.radius,ignoreLayer);
 
-        if (hitColliders != null)
+        if (hitColliders.Length != 0)
         {
             foreach(Collider collider in hitColliders)
             {
                 GameObject gameObject = collider.gameObject;
                 print(gameObject.name);
-            }
+            };
 
             Vector3 direction = GetComponent<Rigidbody>().velocity.normalized;
             RaycastHit hitInfo;
-            bool isHit = Physics.SphereCast(oldPosition, sphereCollider.radius, direction, out hitInfo);
+            bool isHit = Physics.SphereCast(oldPosition, sphereCollider.radius, direction, out hitInfo, maxDistance);
             
             if(isHit)
             {
+                Collider hitCollider = hitInfo.collider;
+                GameObject hitObject = hitCollider.gameObject;
 
-                Collider collider = hitInfo.collider;
-                Transform parent_transform = collider.transform.parent;
-                GameObject parent_object = parent_transform.gameObject;
-
-                print("gameobject : " + parent_object);
+                print("gameobject : " + hitObject);
             }
 
         }
