@@ -5,13 +5,6 @@ using UnityEngine;
 namespace Norikatuo.ReboundShot
 {
 
-    enum BallCondition
-    {
-        stop,
-        Move,
-        CatchInit,
-        Catch,
-    }
 
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(SphereCollider))]
@@ -26,9 +19,6 @@ namespace Norikatuo.ReboundShot
         [Tooltip("弾の速度")]
         public float speed = 10.0f;
 
-        [Tooltip("ONならDefaultContactOffsetの値を衝突検知に使用する")]
-        [SerializeField] private bool useContactOffset = true;
-
         private Rigidbody rigidbody;
         private SphereCollider sphereCollider;
         private float defaultContactOffset;
@@ -38,8 +28,8 @@ namespace Norikatuo.ReboundShot
         private bool canKeepSpeed;
 
         public Vector3 CatchBallLocathion;
+        private bool C_F = false;
 
-        private BallCondition ballCondition = BallCondition.stop;
 
 
         //Start()前に実行　Rigidbody・SphereColliderを作成
@@ -84,87 +74,22 @@ namespace Norikatuo.ReboundShot
 
         private void FixedUpdate()
         {
-
-
-
-            switch (ballCondition)
+            
+            if(C_F)
             {
-                case BallCondition.stop:
-                    Debug.Log("stop");
 
-                    rigidbody.velocity = Vector3.zero;
+            }
+            else
+            {
+                //Debug.Log("Move");
+                // 前フレームで反射していたら反射後速度を反映
+                ApplyReboundVelocity();
 
-                    if (Input.GetKeyDown(KeyCode.R))
-                    {
-                        ballCondition = BallCondition.Move;
+                // 進行方向に衝突対象があるかどうか確認
+                ProcessForwardDetection();
 
-                        Vector3 debugDirection;
-                        debugDirection = new Vector3(Mathf.Cos(Mathf.Deg2Rad), Mathf.Sin(Mathf.Deg2Rad), 0f);
-                        rigidbody.velocity = debugDirection * speed;
-                    }
-                    break;
-                case BallCondition.Move:
-                    Debug.Log("Move");
-                    // 前フレームで反射していたら反射後速度を反映
-                    ApplyReboundVelocity();
-
-                    // 進行方向に衝突対象があるかどうか確認
-                    ProcessForwardDetection();
-
-                    //減速の制限
-                    KeepConstantSpeed();
-
-                    if (Input.GetKeyDown(KeyCode.R))
-                    {
-                        ballCondition = BallCondition.CatchInit;
-                    }
-
-                    break;
-                case BallCondition.CatchInit:
-                    //Debug.Log("CatchInit");
-
-                    //GameObject obj = GameObject.Find("Player1");
-                    //if (obj == null)
-                    //{
-                    //    Debug.LogError("Player1 オブジェクトが見つかりませんでした");
-                    //    break;
-                    //}
-                    //Vector3 locathion = obj.transform.position;
-                    //locathion.x += 10f;
-
-                    //CatchBallLocathion = locathion;
-
-                    ballCondition = BallCondition.Catch;
-
-                    break;                
-                case BallCondition.Catch:
-
-                    Debug.Log("CatchInit");
-
-                    GameObject obj = GameObject.Find("Player1");
-                    if (obj == null)
-                    {
-                        Debug.LogError("Player1 オブジェクトが見つかりませんでした");
-                        break;
-                    }
-                    Vector3 locathion = obj.transform.position;
-                    locathion.x += 10f;
-
-                    CatchBallLocathion = locathion;
-
-
-
-                    Debug.Log("Catch");
-                    Debug.Log(CatchBallLocathion);
-                    this.transform.position = CatchBallLocathion;
-                    rigidbody.velocity = Vector3.zero;
-
-                    if (Input.GetKeyDown(KeyCode.R))
-                    {
-                        ballCondition = BallCondition.stop;
-                    }
-                    break;
-                    //this.transform.SetParent
+                //減速の制限
+                KeepConstantSpeed();
             }
 
         }
@@ -188,31 +113,34 @@ namespace Norikatuo.ReboundShot
         /// </summary>
         private void ProcessForwardDetection()
         {
+            //移動スピード
             var velocity = rigidbody.velocity;
+            //移動ベクトル
             var direction = velocity.normalized;
+            //
+            var nextMoveDistance = velocity.magnitude * Time.fixedDeltaTime;
 
-            var offset = useContactOffset ? defaultContactOffset * 2 : 0;
-            var origin = transform.position - direction * (sphereCastMargin + offset);
-            var colliderRadius = sphereCollider.radius + offset;
-            var isHit = Physics.SphereCast(origin, colliderRadius, direction, out var hitInfo);
+            var origin = transform.position - direction * (sphereCastMargin);
+            var colliderRadius = sphereCollider.radius ;
+            var isHit = Physics.SphereCast(origin, colliderRadius, direction, out var hitInfo, nextMoveDistance);
             if (isHit)
             {
                 var distance = hitInfo.distance - sphereCastMargin;
-                var nextMoveDistance = velocity.magnitude * Time.fixedDeltaTime;
-                if (distance <= nextMoveDistance)
-                {
-                    // 次フレームに使う反射速度を計算
-                    var normal = hitInfo.normal;
-                    var inVecDir = direction;
-                    var outVecDir = Vector3.Reflect(inVecDir, normal);
-                    outVecDir = new Vector3(outVecDir.x, 0.0f, outVecDir.z);
-                    reboundVelocity = outVecDir * speed * bounciness;
 
-                    // 衝突予定先に接するように速度を調整
-                    var adjustVelocity = distance / Time.fixedDeltaTime * direction;
-                    rigidbody.velocity = adjustVelocity;
-                    canKeepSpeed = false;
-                }
+                // 次フレームに使う反射速度を計算
+                var normal = hitInfo.normal;
+                var inVecDir = direction;
+                //反射を計算
+                var outVecDir = Vector3.Reflect(inVecDir, normal);
+                //二次元科
+                outVecDir = new Vector3(outVecDir.x, 0.0f, outVecDir.z);
+                reboundVelocity = outVecDir * speed * bounciness;
+
+                // 衝突予定先に接するように速度を調整
+                var adjustVelocity = distance / Time.fixedDeltaTime * direction;
+                rigidbody.velocity = adjustVelocity;
+                canKeepSpeed = false;
+
             }
         }
 
@@ -235,7 +163,21 @@ namespace Norikatuo.ReboundShot
             }
         }
 
+        public void Find(Transform parent)
+        {
+            transform.parent = parent;
+            rigidbody.velocity = Vector3.zero;
+            C_F = true;
+            Debug.Log("にぇ");
+        }
 
+        public void Fire(Transform parent ,Vector3 FireDirection)
+        {
+
+            rigidbody.velocity = FireDirection * speed;
+            transform.parent = null;
+            C_F = false;
+        }
 
     }
 }
