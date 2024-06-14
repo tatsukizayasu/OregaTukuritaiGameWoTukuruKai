@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+[RequireComponent(typeof(PlayerStatus))]
 public class PlayerController : MonoBehaviour
 {
     private Vector3 _velocity;
     [SerializeField] private float speed = 10.0f;
     [SerializeField] private GameObject ball_prefab;
+    private PlayerStatus status;
 
     // 通知を受け取るメソッド名は「On + Action名」である必要がある
     private void OnMove(InputValue value)
@@ -18,6 +21,11 @@ public class PlayerController : MonoBehaviour
 
         // 移動速度を保持
         _velocity = new Vector3(axis.x, 0, axis.y);
+    }
+
+    private void Start()
+    {
+        status = GetComponent<PlayerStatus>();
     }
 
     private void Update()
@@ -74,13 +82,13 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // Ball が見つからなかった場合の処理
+        // Ball が見つからなかった場合の処理（キャッチしていない時）
         if (!ballFound)
         {
             Vector3 sphereCenter = transform.position;
 
             // OverlapSphereを使用して範囲内のすべてのコライダーを取得
-            Collider[] hitColliders = Physics.OverlapSphere(sphereCenter, 10);
+            Collider[] hitColliders = Physics.OverlapSphere(sphereCenter, status.CatchRamge);
 
             // 取得したコライダーをループして、ゲームオブジェクトを取得
             foreach (Collider hitCollider in hitColliders)
