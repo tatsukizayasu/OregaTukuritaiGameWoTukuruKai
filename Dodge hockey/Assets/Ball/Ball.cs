@@ -14,9 +14,13 @@ public class Ball : MonoBehaviour
     [Range(0, 2)]
     [SerializeField] private float bounciness = 1.0f;
 
+    const float max_speed = 100.0f;
+
     [Tooltip("弾の速度")]
     public float speed = 10.0f;
 
+
+    
     private Rigidbody rigidbody;
     private SphereCollider sphereCollider;
     private float defaultContactOffset;
@@ -25,10 +29,15 @@ public class Ball : MonoBehaviour
     private Vector3 lastDirection;
     private bool canKeepSpeed;
 
-    public Vector3 CatchBallLocathion;
-    private bool C_F = false;
+    private bool CatchFlg = false;
+    private GameObject GoalObj = null;
 
+    GameManager gamemanager;
 
+    public void SetVelocity(Vector3 velocity)
+    {
+        rigidbody.velocity = velocity;
+    }
 
     //Start()前に実行　Rigidbody・SphereColliderを作成
     private void Awake()
@@ -43,12 +52,12 @@ public class Ball : MonoBehaviour
     {
         Init();
 
-        Vector3 debugDirection;
+        //Vector3 debugDirection;
 
-        debugDirection = new Vector3(Mathf.Cos(Mathf.Deg2Rad), Mathf.Sin(Mathf.Deg2Rad), 0f);
-        rigidbody.velocity = debugDirection * speed;
+        //debugDirection = new Vector3(Mathf.Cos(Mathf.Deg2Rad), Mathf.Sin(Mathf.Deg2Rad), 0f);
+        //rigidbody.velocity = debugDirection * speed;
 
-
+        gamemanager = FindObjectOfType<GameManager>();
     }
 
     private void Init()
@@ -72,8 +81,8 @@ public class Ball : MonoBehaviour
 
     private void FixedUpdate()
     {
-            
-        if(C_F)
+
+        if (CatchFlg)
         {
 
         }
@@ -88,6 +97,8 @@ public class Ball : MonoBehaviour
 
             //減速の制限
             KeepConstantSpeed();
+
+            
         }
 
     }
@@ -98,12 +109,28 @@ public class Ball : MonoBehaviour
     /// </summary>
     private void ApplyReboundVelocity()
     {
+
         if (reboundVelocity == null) return;
 
         rigidbody.velocity = reboundVelocity.Value;
-        speed *= bounciness;
+        if(max_speed < speed * bounciness )
+        {
+            speed = max_speed;
+        }
+        else
+        {
+            speed *= bounciness;
+        }
         reboundVelocity = null;
         canKeepSpeed = true;
+
+        if (GoalObj != null)
+        {
+            
+
+            gamemanager.Goal(GoalObj);
+        }
+
     }
 
     /// <summary>
@@ -119,7 +146,7 @@ public class Ball : MonoBehaviour
         var nextMoveDistance = velocity.magnitude * Time.fixedDeltaTime;
 
         var origin = transform.position - direction * (sphereCastMargin);
-        var colliderRadius = sphereCollider.radius ;
+        var colliderRadius = sphereCollider.radius;
         var isHit = Physics.SphereCast(origin, colliderRadius, direction, out var hitInfo, nextMoveDistance);
         if (isHit)
         {
@@ -132,12 +159,26 @@ public class Ball : MonoBehaviour
             var outVecDir = Vector3.Reflect(inVecDir, normal);
             //二次元科
             outVecDir = new Vector3(outVecDir.x, 0.0f, outVecDir.z);
-            reboundVelocity = outVecDir * speed * bounciness;
+            if (max_speed < speed * bounciness)
+            {
+                reboundVelocity = outVecDir * max_speed;
+            }
+            else
+            {
+                reboundVelocity = outVecDir * speed * bounciness;
+            }
 
             // 衝突予定先に接するように速度を調整
             var adjustVelocity = distance / Time.fixedDeltaTime * direction;
             rigidbody.velocity = adjustVelocity;
             canKeepSpeed = false;
+
+            //当たったオブジェクトのタグ
+            string collisionTag = hitInfo.collider.gameObject.tag;
+            if (collisionTag == "Goal")
+            {
+                GoalObj = hitInfo.collider.gameObject;
+            }
 
         }
     }
@@ -165,16 +206,14 @@ public class Ball : MonoBehaviour
     {
         transform.parent = parent;
         rigidbody.velocity = Vector3.zero;
-        C_F = true;
-        Debug.Log("にぇ");
+        CatchFlg = true;
     }
 
-    public void Fire(Transform parent ,Vector3 FireDirection)
+    public void Fire(Transform parent, Vector3 FireDirection)
     {
-
         rigidbody.velocity = FireDirection * speed;
         transform.parent = null;
-        C_F = false;
+        CatchFlg = false;
     }
 
 }
