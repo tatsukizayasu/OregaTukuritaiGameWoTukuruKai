@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlayerStatus : MonoBehaviour
 {
     [SerializeField] private float catchRange;
@@ -18,9 +19,11 @@ public class PlayerStatus : MonoBehaviour
         float a = CatchRamge;   
     }
 
-    // Update is called once per frame
+    // Update is cal
+    // led once per frame
     void Update()
     {
-        
+
     }
+    
 }
