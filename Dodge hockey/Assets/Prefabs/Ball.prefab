@@ -148,9 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bounciness: 1
-  speed: 18
-  useContactOffset: 1
-  CatchBallLocathion: {x: 0, y: 0, z: 0}
+  speed: 30
 --- !u!114 &8289720572891938411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,3 +164,4 @@ MonoBehaviour:
   bounciness: 1
   speed: 18
   useContactOffset: 1
+  CatchBallLocathion: {x: 0, y: 0, z: 0}

@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision col)
     {
-        Debug.Log("‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ");
+        //Debug.Log("‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ");
         if (col.gameObject.name == "Ball(Clone)")
         {
             Collider collider = col.collider;
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
             parent_object.GetComponent<Ball_test>().BallCondition = BallCondition_test.stop;
 
             //col.rigidbody.velocity = Vector3.zero;
-            Debug.Log("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+            //Debug.Log("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
            // ball.transform.SetParent(transform);
         }
     }
