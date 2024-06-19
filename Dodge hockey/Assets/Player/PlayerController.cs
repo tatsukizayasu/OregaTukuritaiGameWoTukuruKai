@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject ball_prefab;
     private PlayerStatus status;
 
+    private Vector2 look_vector;
+    private bool has_ball;
+
     // 通知を受け取るメソッド名は「On + Action名」である必要がある
     private void OnMove(InputValue value)
     {
@@ -26,6 +29,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         status = GetComponent<PlayerStatus>();
+        has_ball = false;
     }
 
     private void Update()
@@ -52,38 +56,59 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnCatch(InputValue value)
+    private void OnLook(InputValue value)
     {
-        // 子オブジェクトを格納する配列を作成
-        var Children = new Transform[transform.childCount];
-        int ChildCount = 0;
-        bool ballFound = false; // Ball が見つかったかどうかを追跡するフラグ
+        look_vector = value.Get<Vector2>();
+    }
 
-        // 子オブジェクトを配列に格納し、特定の名前を持つオブジェクトを探す
-        foreach (Transform Child in transform)
+    private void OnThrow(InputValue value)
+    {
+        //// 子オブジェクトを格納する配列を作成
+        //var Children = new Transform[transform.childCount];
+        //int ChildCount = 0;
+
+        //// 子オブジェクトを配列に格納し、特定の名前を持つオブジェクトを探す
+        //foreach (Transform Child in transform)
+        //{
+        //    Children[ChildCount++] = Child;
+        //    if (Child.name == "Ball(Clone)")
+        //    {
+        //        // Ball スクリプトを取得
+        //        Ball ballscript = Child.GetComponent<Ball>();
+
+        //        if (ballscript != null)
+        //        {
+        //            Vector3 BallFire = new Vector3(10f, 0f, 10f);
+        //            // Ball スクリプトの関数を実行
+        //            ballscript.Fire(transform, BallFire);
+        //        }
+        //        else
+        //        {
+        //            Debug.LogError("Ball script not found on the Ball object.");
+        //        }
+        //    }
+        //}
+
+        if (has_ball)
         {
-            Children[ChildCount++] = Child;
-            if (Child.name == "Ball(Clone)")
+            Transform child = transform.Find("Ball(Clone)");
+            if(child != null)
             {
-                // Ball スクリプトを取得
-                Ball ballscript = Child.GetComponent<Ball>();
-
-                if (ballscript != null)
+                Ball ball = child.GetComponent<Ball>();
+                if(ball != null)
                 {
-                    Vector3 BallFire = new Vector3(10f, 0f, 10f);
-                    // Ball スクリプトの関数を実行
-                    ballscript.Fire(transform ,BallFire);
-                    ballFound = true; // Ball が見つかったのでフラグを更新
-                }
-                else
-                {
-                    Debug.LogError("Ball script not found on the Ball object.");
+                    Vector3 ball_pos = transform.position + (new Vector3(look_vector.x, 0.0f, look_vector.y) * 2);
+                    ball.Fire(ball_pos, look_vector);
+                    has_ball = false;
                 }
             }
         }
+    }
 
-        // Ball が見つからなかった場合の処理（キャッチしていない時）
-        if (!ballFound)
+    private void OnCatch(InputValue value)
+    {
+        // Ballを持っていないとき
+        if (!has_ball)
         {
             Vector3 sphereCenter = transform.position;
 
@@ -93,11 +118,13 @@ public class PlayerController : MonoBehaviour
             // 取得したコライダーをループして、ゲームオブジェクトを取得
             foreach (Collider hitCollider in hitColliders)
             {
+                print(hitCollider);
                 GameObject hitObject = hitCollider.gameObject;
                 Ball ball = hitObject.GetComponent<Ball>();
-                if (ball != null)
+                if ((ball != null) && (!ball.CatchFlg))
                 {
                     ball.Find(transform);
+                    has_ball = true;
                 }
             }
         }

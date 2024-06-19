@@ -29,7 +29,8 @@ public class Ball : MonoBehaviour
     private Vector3 lastDirection;
     private bool canKeepSpeed;
 
-    private bool CatchFlg = false;
+    private bool catchFlg = false;
+    public bool CatchFlg { get; set; }
     private GameObject GoalObj = null;
 
     GameManager gamemanager;
@@ -82,7 +83,7 @@ public class Ball : MonoBehaviour
     private void FixedUpdate()
     {
 
-        if (CatchFlg)
+        if (catchFlg)
         {
 
         }
@@ -206,14 +207,17 @@ public class Ball : MonoBehaviour
     {
         transform.parent = parent;
         rigidbody.velocity = Vector3.zero;
-        CatchFlg = true;
+        catchFlg = true;
     }
 
-    public void Fire(Transform parent, Vector3 FireDirection)
+    public void Fire(Vector3 start_pos, Vector3 FireDirection)
     {
-        rigidbody.velocity = FireDirection * speed;
         transform.parent = null;
-        CatchFlg = false;
+        reboundVelocity = null;
+        transform.position = start_pos;
+        rigidbody.velocity = FireDirection * speed;
+
+        catchFlg = false;
     }
 
 }
