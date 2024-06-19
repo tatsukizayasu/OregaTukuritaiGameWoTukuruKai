@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 
 [RequireComponent(typeof(PlayerStatus))]
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerController : MonoBehaviour
 {
     private Vector3 _velocity;
