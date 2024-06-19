@@ -60,75 +60,65 @@ public class PlayerController : MonoBehaviour
     private void OnLook(InputValue value)
     {
         look_vector = value.Get<Vector2>();
+    }     
+
+    private void OnBallHandle(InputValue value)
+    {
+        //  ballを持っているとき投げる、持っていなければキャッチする
+        Transform child = transform.Find("Ball(Clone)");
+        if (child != null)
+        {
+            Throw(child);
+        }
+        else
+        {
+            Catch();
+        }
+
     }
 
-    private void OnThrow(InputValue value)
-    {
-        //// 子オブジェクトを格納する配列を作成
-        //var Children = new Transform[transform.childCount];
-        //int ChildCount = 0;
-
-        //// 子オブジェクトを配列に格納し、特定の名前を持つオブジェクトを探す
-        //foreach (Transform Child in transform)
-        //{
-        //    Children[ChildCount++] = Child;
-        //    if (Child.name == "Ball(Clone)")
-        //    {
-        //        // Ball スクリプトを取得
-        //        Ball ballscript = Child.GetComponent<Ball>();
-
-        //        if (ballscript != null)
-        //        {
-        //            Vector3 BallFire = new Vector3(10f, 0f, 10f);
-        //            // Ball スクリプトの関数を実行
-        //            ballscript.Fire(transform, BallFire);
-        //        }
-        //        else
-        //        {
-        //            Debug.LogError("Ball script not found on the Ball object.");
-        //        }
-        //    }
-        //}
-
-        if (has_ball)
+    private void Throw(Transform child)
+    {        
+        Ball ball = child.GetComponent<Ball>();
+        if (ball != null)
         {
-            Transform child = transform.Find("Ball(Clone)");
-            if(child != null)
+            Vector3 ball_pos;
+            if (look_vector != Vector2.zero)
             {
-                Ball ball = child.GetComponent<Ball>();
-                if(ball != null)
-                {
-                    Vector3 ball_pos = transform.position + (new Vector3(look_vector.x, 0.0f, look_vector.y) * 2);
-                    ball.Fire(ball_pos, look_vector);
-                    has_ball = false;
-                }
+                //  方向指定して投げる
+                ball_pos = transform.position + (new Vector3(look_vector.x, 0.0f, look_vector.y) * 2);
+                ball.Fire(ball_pos, new Vector3(look_vector.x, 0.0f, look_vector.y));
+            }
+            else
+            {
+                //  方向指定していないとき、向いている方向に投げる
+                ball_pos = transform.position + (transform.forward * 2);
+                ball.Fire(ball_pos, transform.forward);
+            }
+        }
+
+        has_ball = false;
+    }
+
+    private void Catch()
+    {
+        Vector3 sphereCenter = transform.position;
+
+        // OverlapSphereを使用して範囲内のすべてのコライダーを取得
+        Collider[] hitColliders = Physics.OverlapSphere(sphereCenter, status.CatchRamge);
+
+        // 取得したコライダーをループして、ゲームオブジェクトを取得
+        foreach (Collider hitCollider in hitColliders)
+        {
+            print(hitCollider);
+            GameObject hitObject = hitCollider.gameObject;
+            Ball ball = hitObject.GetComponent<Ball>();
+            if ((ball != null) && (!ball.CatchFlg))
+            {
+                ball.Find(transform);
+                has_ball = true;
             }
         }
     }
 
-    private void OnCatch(InputValue value)
-    {
-        // Ballを持っていないとき
-        if (!has_ball)
-        {
-            Vector3 sphereCenter = transform.position;
-
-            // OverlapSphereを使用して範囲内のすべてのコライダーを取得
-            Collider[] hitColliders = Physics.OverlapSphere(sphereCenter, status.CatchRamge);
-
-            // 取得したコライダーをループして、ゲームオブジェクトを取得
-            foreach (Collider hitCollider in hitColliders)
-            {
-                print(hitCollider);
-                GameObject hitObject = hitCollider.gameObject;
-                Ball ball = hitObject.GetComponent<Ball>();
-                if ((ball != null) && (!ball.CatchFlg))
-                {
-                    ball.Find(transform);
-                    has_ball = true;
-                }
-            }
-        }
-
-    }
 }

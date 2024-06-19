@@ -214,6 +214,7 @@ public class Ball : MonoBehaviour
     {
         transform.parent = null;
         reboundVelocity = null;
+        canKeepSpeed = false;
         transform.position = start_pos;
         rigidbody.velocity = FireDirection * speed;
 

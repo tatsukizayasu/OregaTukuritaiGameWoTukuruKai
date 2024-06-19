@@ -35,25 +35,7 @@
                 {
                     "name": "BallHandle",
                     "type": "Button",
-                    "id": "14d27797-93bb-4f95-b5a1-e96f65431774",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Catch",
-                    "type": "Button",
                     "id": "dcea7276-3b1b-443f-a3e5-25e6deabce9d",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Throw",
-                    "type": "Button",
-                    "id": "1bc161b3-199f-47d5-9349-09ca9ad3a740",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -272,45 +254,12 @@
                 },
                 {
                     "name": "",
-                    "id": "f4493bf1-d4e8-4698-b291-a6450e7130de",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "BallHandle",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a663ac97-9e27-43ce-8050-faaefc6070f7",
-                    "path": "<Gamepad>/leftTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "BallHandle",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "408706f1-dfbc-4e46-808f-2f47abb2e0a6",
-                    "path": "<Keyboard>/enter",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "BallHandle",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "26634b73-47b4-454d-9d48-9596b1161b83",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Catch",
+                    "action": "BallHandle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -321,7 +270,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Catch",
+                    "action": "BallHandle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -332,40 +281,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Catch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b7d627e3-e0ae-4f3f-94ba-b46e38f0d681",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Throw",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "cb5c989d-f6cb-434b-bb9c-6c1df6947bae",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Throw",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "fd8e0ddb-b32d-45dd-844e-77c72d9c5531",
-                    "path": "<Gamepad>/leftTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Throw",
+                    "action": "BallHandle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
