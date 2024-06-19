@@ -33,46 +33,46 @@ namespace UnityChan
 		{
 			// 各参照の初期化
 			anim = GetComponent<Animator> ();
-			currentState = anim.GetCurrentAnimatorStateInfo (0);
-			previousState = currentState;
+			//currentState = anim.GetCurrentAnimatorStateInfo (0);
+			//previousState = currentState;
 			// ランダム判定用関数をスタートする
-			StartCoroutine ("RandomChange");
+			//StartCoroutine ("RandomChange");
 		}
 	
 		// Update is called once per frame
 		void  Update ()
 		{
 			// ↑キー/スペースが押されたら、ステートを次に送る処理
-			if (Input.GetKeyDown ("up") || Input.GetButton ("Jump")) {
-				// ブーリアンNextをtrueにする
-				anim.SetBool ("Next", true);
-			}
+			//if (Input.GetKeyDown ("up") || Input.GetButton ("Jump")) {
+			//	// ブーリアンNextをtrueにする
+			//	anim.SetBool ("Next", true);
+			//}
 		
 			// ↓キーが押されたら、ステートを前に戻す処理
-			if (Input.GetKeyDown ("down")) {
-				// ブーリアンBackをtrueにする
-				anim.SetBool ("Back", true);
-			}
+			//if (Input.GetKeyDown ("down")) {
+			//	// ブーリアンBackをtrueにする
+			//	anim.SetBool ("Back", true);
+			//}
 		
 			// "Next"フラグがtrueの時の処理
-			if (anim.GetBool ("Next")) {
-				// 現在のステートをチェックし、ステート名が違っていたらブーリアンをfalseに戻す
-				currentState = anim.GetCurrentAnimatorStateInfo (0);
-				if (previousState.fullPathHash != currentState.fullPathHash) {
-					anim.SetBool ("Next", false);
-					previousState = currentState;				
-				}
-			}
+			//if (anim.GetBool ("Next")) {
+			//	// 現在のステートをチェックし、ステート名が違っていたらブーリアンをfalseに戻す
+			//	currentState = anim.GetCurrentAnimatorStateInfo (0);
+			//	if (previousState.fullPathHash != currentState.fullPathHash) {
+			//		anim.SetBool ("Next", false);
+			//		previousState = currentState;				
+			//	}
+			//}
 		
 			// "Back"フラグがtrueの時の処理
-			if (anim.GetBool ("Back")) {
-				// 現在のステートをチェックし、ステート名が違っていたらブーリアンをfalseに戻す
-				currentState = anim.GetCurrentAnimatorStateInfo (0);
-				if (previousState.fullPathHash != currentState.fullPathHash) {
-					anim.SetBool ("Back", false);
-					previousState = currentState;
-				}
-			}
+			//if (anim.GetBool ("Back")) {
+			//	// 現在のステートをチェックし、ステート名が違っていたらブーリアンをfalseに戻す
+			//	currentState = anim.GetCurrentAnimatorStateInfo (0);
+			//	if (previousState.fullPathHash != currentState.fullPathHash) {
+			//		anim.SetBool ("Back", false);
+			//		previousState = currentState;
+			//	}
+			//}
 		}
 
 		void OnGUI ()

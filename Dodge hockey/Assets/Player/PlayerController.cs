@@ -1,4 +1,3 @@
-using Norikatuo.ReboundShot;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +14,6 @@ public class PlayerController : MonoBehaviour
     private PlayerStatus status;
 
     private Vector2 look_vector;
-    private bool has_ball;
 
     // 通知を受け取るメソッド名は「On + Action名」である必要がある
     private void OnMove(InputValue value)
@@ -30,31 +28,12 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         status = GetComponent<PlayerStatus>();
-        has_ball = false;
     }
 
     private void Update()
     {
         // オブジェクト移動
         transform.position += _velocity * speed * Time.deltaTime;
-    }
-
-    void OnCollisionEnter(Collision col)
-    {
-        //Debug.Log("あああああああああああああああああ");
-        if (col.gameObject.name == "Ball(Clone)")
-        {
-            Collider collider = col.collider;
-            Transform parent_transform = collider.transform.parent;
-            GameObject parent_object = parent_transform.gameObject;
-
-            col.transform.parent = this.transform;
-            parent_object.GetComponent<Ball_test>().BallCondition = BallCondition_test.stop;
-
-            //col.rigidbody.velocity = Vector3.zero;
-            //Debug.Log("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
-           // ball.transform.SetParent(transform);
-        }
     }
 
     private void OnLook(InputValue value)
@@ -83,21 +62,22 @@ public class PlayerController : MonoBehaviour
         if (ball != null)
         {
             Vector3 ball_pos;
+            float ball_y = ball.transform.position.y;
             if (look_vector != Vector2.zero)
             {
                 //  方向指定して投げる
                 ball_pos = transform.position + (new Vector3(look_vector.x, 0.0f, look_vector.y) * 2);
+                ball_pos.y = ball_y;
                 ball.Fire(ball_pos, new Vector3(look_vector.x, 0.0f, look_vector.y));
             }
             else
             {
                 //  方向指定していないとき、向いている方向に投げる
-                ball_pos = transform.position + (transform.forward * 2);
+                ball_pos = transform.position + (new Vector3(transform.forward.x, 0.0f, transform.forward.z) * 2);
+                ball_pos.y = ball_y;
                 ball.Fire(ball_pos, transform.forward);
             }
         }
-
-        has_ball = false;
     }
 
     private void Catch()
@@ -116,7 +96,6 @@ public class PlayerController : MonoBehaviour
             if ((ball != null) && (!ball.CatchFlg))
             {
                 ball.Find(transform);
-                has_ball = true;
             }
         }
     }

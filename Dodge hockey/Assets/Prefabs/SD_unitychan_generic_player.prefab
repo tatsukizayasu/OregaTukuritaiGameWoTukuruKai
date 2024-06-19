@@ -3548,7 +3548,7 @@ MonoBehaviour:
   interval: 5
   windPower: 1
   gravity: 0.98
-  isGUI: 1
+  isGUI: 0
 --- !u!114 &2783101579529205476
 MonoBehaviour:
   m_ObjectHideFlags: 0
