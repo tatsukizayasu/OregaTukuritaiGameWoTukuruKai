@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
     {
         //Ballの移動方向を設定
         Ball BallComponent = ball.GetComponent<Ball>();
-        BallComponent.SetVelocity(new Vector3(0.0f, 0.0f, 1.0f) * BallComponent.speed);
+        BallComponent.SetVelocity(new Vector3(0.0f, 0.0f, 1.0f) * BallComponent.Speed);
 
         // GoalIdentifierスクリプトを追加し、識別子を設定
         goal1.GetComponent<Goal>().GoalID = 0;
@@ -77,12 +77,12 @@ public class GameManager : MonoBehaviour
         if (GoalID == 0)
         {
             ball.transform.position = new Vector3(3.0f, 1.6f, 12.0f);
-            BallComponent.SetVelocity(new Vector3(0.003f, 0.0f, -0.01f) * BallComponent.speed);
+            BallComponent.SetVelocity(new Vector3(0.003f, 0.0f, -0.01f) * BallComponent.Speed);
         }
         else
         {
             ball.transform.position = new Vector3(-3.0f, 1.6f, 12.0f);
-            BallComponent.SetVelocity(new Vector3(-0.003f, 0.0f, -0.01f) * BallComponent.speed);
+            BallComponent.SetVelocity(new Vector3(-0.003f, 0.0f, -0.01f) * BallComponent.Speed);
         }
     }
 }

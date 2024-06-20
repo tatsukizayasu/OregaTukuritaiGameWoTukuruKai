@@ -3664,6 +3664,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   catchRange: 5
   life: 2
+  speed: 10
 --- !u!114 &5088677965687755363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3706,7 +3707,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 527cb29beb295a8469c248686fcf938a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
   ball_prefab: {fileID: 0}
 --- !u!114 &8642104419533539002
 MonoBehaviour:

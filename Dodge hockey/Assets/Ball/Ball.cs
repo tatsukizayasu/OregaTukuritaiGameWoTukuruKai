@@ -19,7 +19,8 @@ public class Ball : MonoBehaviour
     const float max_speed = 100.0f;
 
     [Tooltip("’e‚Ì‘¬“x")]
-    public float speed = 10.0f;
+    [SerializeField] private float speed = 10.0f;
+    public float Speed { get { return speed; } set { speed = value; } }
 
 
     
@@ -212,9 +213,12 @@ public class Ball : MonoBehaviour
 
     public void Find(Transform parent)
     {
+        transform.position = parent.position;
         transform.parent = parent;
         rigidbody.velocity = Vector3.zero;
         catchFlg = true;
+        sphereCollider.enabled = false;
+
     }
 
     public void Fire(Vector3 start_pos, Vector3 FireDirection)
@@ -226,6 +230,18 @@ public class Ball : MonoBehaviour
         rigidbody.velocity = FireDirection * speed;
 
         catchFlg = false;
+        sphereCollider.enabled = true;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision == null) return;
+        GameObject hit_object = collision.gameObject;
+        PlayerController player = hit_object.GetComponent<PlayerController>();
+        if (player != null)
+        {
+            player.ApplyDamage(this);
+        }
     }
 
 }
