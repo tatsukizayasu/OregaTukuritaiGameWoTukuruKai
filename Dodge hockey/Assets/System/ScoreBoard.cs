@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
-
+[RequireComponent(typeof(GameManager))]
 public class ScoreBoard : MonoBehaviour
 {
     private int[] score = { 0, 0 };
 
     public GUIStyle custom_style;
+
+    private GameObject[] players;
 
     private void Awake()
     {
@@ -33,6 +34,7 @@ public class ScoreBoard : MonoBehaviour
         // 背景色を設定する場合（ボックススタイルなど）
         custom_style.normal.background = MakeTex(2, 2, new Color(0.25f, 0.25f, 0.25f, 0.5f)); // 半透明のグレー
 
+        players = GetComponent<GameManager>().Players;
     }
 
     private void Init()

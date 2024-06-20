@@ -244,7 +244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbea59e5f5b6d0349af4ffa1fd89ed1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player_prefab: {fileID: 5353505442795925913, guid: 129999dac799a0640888ba926a55a4b9, type: 3}
+  player_prefab: {fileID: 5353505442795925913, guid: c9b6b9796372ca845b1a6fac734d4ea5, type: 3}
   center_line: {fileID: 7212646725060972586, guid: 318632344b2da784da619e571da3a301, type: 3}
   ball_prefab: {fileID: 692305724288206166, guid: 24a6c95d21b0f1f42ba2d91381fe4db6, type: 3}
   goal_prefab: {fileID: 7759230164699589816, guid: 864010e83877b7349a49d7d95c938eef, type: 3}

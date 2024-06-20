@@ -14,6 +14,8 @@ public class Ball : MonoBehaviour
     [Range(0, 2)]
     [SerializeField] private float bounciness = 1.0f;
 
+    [SerializeField] private const float ball_posY = 1.7f;
+
     const float max_speed = 100.0f;
 
     [Tooltip("’e‚Ì‘¬“x")]
@@ -102,6 +104,11 @@ public class Ball : MonoBehaviour
             
         }
 
+    }
+    private void Update()
+    {
+        Vector3 pos = transform.position;
+        transform.position = new Vector3(pos.x, ball_posY, pos.z);
     }
 
 
