@@ -12,8 +12,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject ball_prefab;
     [SerializeField] private GameObject goal_prefab;
 
-    private GameObject player1;
-    private GameObject player2;
+    private GameObject[] players = new GameObject[2];
+    public GameObject[] Players { get { return players; } }
     private GameObject goal1;
     private GameObject goal2;
     private GameObject ball;
@@ -24,11 +24,11 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         //Playerプレハブのクローン作成
-        player1 = Instantiate(player_prefab);
-        player2 = Instantiate(player_prefab);
+        players[0] = Instantiate(player_prefab);
+        players[1] = Instantiate(player_prefab);
         //座標の設定
-        player1.transform.position = new Vector3(-12.0f, 1.6f, 0);
-        player2.transform.position = new Vector3( 12.0f, 1.6f, 0);
+        players[0].transform.position = new Vector3(-12.0f, 1.6f, 0);
+        players[1].transform.position = new Vector3( 12.0f, 1.6f, 0);
 
         //Goalプレハブのクローン作成
         goal1 = Instantiate(goal_prefab);
@@ -84,10 +84,5 @@ public class GameManager : MonoBehaviour
             ball.transform.position = new Vector3(-3.0f, 1.6f, 12.0f);
             BallComponent.SetVelocity(new Vector3(-0.003f, 0.0f, -0.01f) * BallComponent.speed);
         }
-
-        Debug.Log("P1");
-        Debug.Log(PlayerPoint[0]);
-        Debug.Log("P2");
-        Debug.Log(PlayerPoint[1]);
     }
 }
