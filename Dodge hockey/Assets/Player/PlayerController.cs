@@ -9,7 +9,6 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     private Vector3 _velocity;
-    [SerializeField] private float speed = 10.0f;
     [SerializeField] private GameObject ball_prefab;
     private PlayerStatus status;
 
@@ -33,7 +32,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         // オブジェクト移動
-        transform.position += _velocity * speed * Time.deltaTime;
+        transform.position += _velocity * status.Speed * Time.deltaTime;
     }
 
     private void OnLook(InputValue value)
@@ -77,6 +76,13 @@ public class PlayerController : MonoBehaviour
                 ball_pos.y = ball_y;
                 ball.Fire(ball_pos, transform.forward);
             }
+
+            UnityChanController animator = GetComponent<UnityChanController>();
+            if(animator != null)
+            {
+                animator.PlayThrowAnim();
+            }
+
         }
     }
 
@@ -90,7 +96,6 @@ public class PlayerController : MonoBehaviour
         // 取得したコライダーをループして、ゲームオブジェクトを取得
         foreach (Collider hitCollider in hitColliders)
         {
-            print(hitCollider);
             GameObject hitObject = hitCollider.gameObject;
             Ball ball = hitObject.GetComponent<Ball>();
             if ((ball != null) && (!ball.CatchFlg))

@@ -87,4 +87,9 @@ public class UnityChanController : MonoBehaviour
             animator.CrossFade("Standing loop", 0.3f);
         }
     }
+
+    public void PlayThrowAnim()
+    {
+        animator.CrossFade("Throw", 0.1f);
+    }
 }

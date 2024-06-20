@@ -5,9 +5,13 @@ using UnityEngine;
 public class PlayerStatus : MonoBehaviour
 {
     [SerializeField] private float catchRange = 5;
+    public float CatchRamge { set { catchRange = value; } get { return catchRange; } }
+
     [SerializeField] private int life = 2;
     public int Life { get; set; }
-    public float CatchRamge { set { catchRange = value; } get { return catchRange; } }
+
+    [SerializeField] private float speed = 10;
+    public float Speed { get; set; }
 
     private void Awake()
     {
