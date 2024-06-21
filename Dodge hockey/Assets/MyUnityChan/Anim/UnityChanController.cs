@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class UnityChanController : MonoBehaviour
 {
-    private Animator animator; //Unityちゃんのジャンプ設定するためのAnimator
+    private Animator animator; //UnityちゃんのAnimator
 
     // 最大の回転角速度[deg/s]
     [SerializeField] private float maxAngularSpeed = Mathf.Infinity;
@@ -18,6 +18,9 @@ public class UnityChanController : MonoBehaviour
 
     private Transform _transform;
     private Vector3 prevPosition;
+
+    private bool isRotation = true; //  進行方向から回転させるかどうか
+    public bool IsRotation { get { return isRotation; } set { isRotation = value; } }
 
     // Start is called before the first frame update
     void Start()
@@ -46,34 +49,37 @@ public class UnityChanController : MonoBehaviour
         //  前フレーム位置の更新
         prevPosition = position;
 
-        //  静止状態は進行方向を特定できないため回転しない
-        if(delta == Vector3.zero)
-        {
-            return;
+        if(isRotation)
+        {   
+            //  静止状態は進行方向を特定できないため回転しない
+            if(delta == Vector3.zero)
+            {
+                return;
+            }
+
+            //  進行方向に向くクォータニオンを取得
+            Quaternion targetRot = Quaternion.LookRotation(delta, Vector3.up);
+
+            // 現在の向きと進行方向との角度差を計算
+            float diffAngle = Vector3.Angle(_transform.forward, delta);
+            // 現在フレームで回転する角度の計算
+            float rotAngle = Mathf.SmoothDampAngle(
+                0,
+                diffAngle,
+                ref currentAngularVelocity,
+                smoothTime,
+                maxAngularSpeed
+            );
+            // 現在フレームにおける回転を計算
+            Quaternion nextRot = Quaternion.RotateTowards(
+                _transform.rotation,
+                targetRot,
+                rotAngle
+            );
+
+                // オブジェクトの回転に反映
+                _transform.rotation = nextRot;
         }
-
-        //  進行方向に向くクォータニオンを取得
-        Quaternion targetRot = Quaternion.LookRotation(delta, Vector3.up);
-
-        // 現在の向きと進行方向との角度差を計算
-        float diffAngle = Vector3.Angle(_transform.forward, delta);
-        // 現在フレームで回転する角度の計算
-        float rotAngle = Mathf.SmoothDampAngle(
-            0,
-            diffAngle,
-            ref currentAngularVelocity,
-            smoothTime,
-            maxAngularSpeed
-        );
-        // 現在フレームにおける回転を計算
-        Quaternion nextRot = Quaternion.RotateTowards(
-            _transform.rotation,
-            targetRot,
-            rotAngle
-        );
-
-        // オブジェクトの回転に反映
-        _transform.rotation = nextRot;
     }
 
     private void OnMove(InputValue value)
@@ -86,5 +92,15 @@ public class UnityChanController : MonoBehaviour
         {
             animator.CrossFade("Standing loop", 0.3f);
         }
+    }
+
+    public void OnDamaged()
+    {
+        animator.CrossFade("Damaged", 0.4f);
+    }
+
+    public void PlayThrowAnim()
+    {
+        animator.CrossFade("Throw", 0.1f);
     }
 }

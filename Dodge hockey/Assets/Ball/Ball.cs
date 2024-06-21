@@ -18,7 +18,8 @@ public class Ball : MonoBehaviour
     [SerializeField] private const float ball_posY = 1.7f;
 
     [Tooltip("弾の速度")]
-    public float speed = 10.0f;
+    [SerializeField] private float speed = 10.0f;
+    public float Speed { get { return speed; } set { speed = value; } }
 
     [SerializeField] public GameObject goaleffect;
 
@@ -222,9 +223,12 @@ public class Ball : MonoBehaviour
 
     public void Find(Transform parent)
     {
+        transform.position = parent.position;
         transform.parent = parent;
         rigidbody.velocity = Vector3.zero;
         catchFlg = true;
+        sphereCollider.enabled = false;
+
     }
 
     public void Fire(Vector3 start_pos, Vector3 FireDirection)
@@ -236,6 +240,29 @@ public class Ball : MonoBehaviour
         rigidbody.velocity = FireDirection * speed;
 
         catchFlg = false;
+        sphereCollider.enabled = true;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision == null) return;
+        GameObject hit_object = collision.gameObject;
+        PlayerController player = hit_object.GetComponent<PlayerController>();
+        if (player != null)
+        {
+            // 法線を取得(基本1面しか当たらない処理になっているので合成を考えない)
+            Vector3 normal = collision.contacts[0].normal;
+
+            if (speed > 40)
+            {
+                player.ApplyDamage(normal, speed);
+            }
+            else
+            {
+                player.Catch();
+            }
+        }
+        
     }
 
 }

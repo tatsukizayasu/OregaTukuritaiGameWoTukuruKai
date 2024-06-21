@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(ScoreBoard))]
 public class GameManager : MonoBehaviour
@@ -22,7 +24,6 @@ public class GameManager : MonoBehaviour
 
     private SE_Player se_players;
 
-    private int[] PlayerPoint = {0,0};
 
     private void Awake()
     {
@@ -52,7 +53,7 @@ public class GameManager : MonoBehaviour
     {
         //BallÇÃà⁄ìÆï˚å¸Çê›íË
         Ball BallComponent = ball.GetComponent<Ball>();
-        BallComponent.SetVelocity(new Vector3(0.0f, 0.0f, 1.0f) * BallComponent.speed);
+        BallComponent.SetVelocity(new Vector3(0.0f, 0.0f, 1.0f) * BallComponent.Speed);
 
         //Debug
 
@@ -70,7 +71,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        PlayerRespawn(0);
+        PlayerRespawn(1);
     }
 
     public void Goal (GameObject goal,Vector3 locathion)
@@ -93,12 +95,44 @@ public class GameManager : MonoBehaviour
         if (GoalID == 0)
         {
             ball.transform.position = new Vector3(3.0f, 1.6f, 12.0f);
-            BallComponent.SetVelocity(new Vector3(0.003f, 0.0f, -0.01f) * BallComponent.speed);
+            BallComponent.SetVelocity(new Vector3(0.003f, 0.0f, -0.01f) * BallComponent.Speed);
         }
         else
         {
             ball.transform.position = new Vector3(-3.0f, 1.6f, 12.0f);
-            BallComponent.SetVelocity(new Vector3(-0.003f, 0.0f, -0.01f) * BallComponent.speed);
+            BallComponent.SetVelocity(new Vector3(-0.003f, 0.0f, -0.01f) * BallComponent.Speed);
         }
     }
+
+    private void PlayerRespawn(int i)
+    {
+        if(i < players.Length)
+        {
+            if (players[i] == null)
+            {
+                players[i] = Instantiate(player_prefab);
+                NavMeshAgent nav = players[i].GetComponent<NavMeshAgent>();
+                if (nav != null)
+                {
+                    nav.enabled = false;
+                }
+
+                if(i == 0)
+                {
+                    players[i].transform.position = new Vector3(-12.0f, 1.6f, 0);
+                }
+                else
+                {
+                    players[i].transform.position = new Vector3(12.0f, 1.6f, 0);
+                }
+
+                if (nav != null)
+                {
+                    nav.enabled = true;
+                }             
+            }
+        }
+    }
+    
+
 }
