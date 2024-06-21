@@ -249,7 +249,7 @@ MonoBehaviour:
   center_line: {fileID: 7212646725060972586, guid: 318632344b2da784da619e571da3a301, type: 3}
   ball_prefab: {fileID: 692305724288206166, guid: 24a6c95d21b0f1f42ba2d91381fe4db6, type: 3}
   goal_prefab: {fileID: 7759230164699589816, guid: 864010e83877b7349a49d7d95c938eef, type: 3}
-  goal_effect: {fileID: 4853709255755121654, guid: 59148d03a24eabf4485c8b61fec3ba38, type: 3}
+  goal_effect: {fileID: 5572618468147901460, guid: 6fa8d7f359a6dc4428f5880c636aa043, type: 3}
 --- !u!4 &435272165
 Transform:
   m_ObjectHideFlags: 0
