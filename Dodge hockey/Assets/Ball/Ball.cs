@@ -240,8 +240,19 @@ public class Ball : MonoBehaviour
         PlayerController player = hit_object.GetComponent<PlayerController>();
         if (player != null)
         {
-            player.ApplyDamage(this);
+            // –@ü‚ðŽæ“¾(Šî–{1–Ê‚µ‚©“–‚½‚ç‚È‚¢ˆ—‚É‚È‚Á‚Ä‚¢‚é‚Ì‚Å‡¬‚ðl‚¦‚È‚¢)
+            Vector3 normal = collision.contacts[0].normal;
+
+            if (speed > 40)
+            {
+                player.ApplyDamage(normal, speed);
+            }
+            else
+            {
+                player.Catch();
+            }
         }
+        
     }
 
 }

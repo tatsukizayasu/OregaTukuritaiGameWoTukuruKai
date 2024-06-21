@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(ScoreBoard))]
 public class GameManager : MonoBehaviour
@@ -60,7 +61,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        PlayerRespawn(0);
+        PlayerRespawn(1);
     }
 
     public void Goal (GameObject goal)
@@ -83,6 +85,36 @@ public class GameManager : MonoBehaviour
         {
             ball.transform.position = new Vector3(-3.0f, 1.6f, 12.0f);
             BallComponent.SetVelocity(new Vector3(-0.003f, 0.0f, -0.01f) * BallComponent.Speed);
+        }
+    }
+
+    private void PlayerRespawn(int i)
+    {
+        if(i < players.Length)
+        {
+            if (players[i] == null)
+            {
+                players[i] = Instantiate(player_prefab);
+                NavMeshAgent nav = players[i].GetComponent<NavMeshAgent>();
+                if (nav != null)
+                {
+                    nav.enabled = false;
+                }
+
+                if(i == 0)
+                {
+                    players[i].transform.position = new Vector3(-12.0f, 1.6f, 0);
+                }
+                else
+                {
+                    players[i].transform.position = new Vector3(12.0f, 1.6f, 0);
+                }
+
+                if (nav != null)
+                {
+                    nav.enabled = true;
+                }
+            }
         }
     }
 }

@@ -10,11 +10,13 @@ using UnityEngine.UIElements;
 public class PlayerController : MonoBehaviour
 {
     private Vector3 _velocity;
-    [SerializeField] private GameObject ball_prefab;
     private PlayerStatus status;
 
     private Transform hand_position;
     private Vector2 look_vector;
+
+    [SerializeField] private const float death_time = 3.0f;
+    private float count_death_time;
 
     // 通知を受け取るメソッド名は「On + Action名」である必要がある
     private void OnMove(InputValue value)
@@ -30,6 +32,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         status = GetComponent<PlayerStatus>();
+        count_death_time = 0;
 
         // モデル内の"Character1_RightHandThumb4"を再帰的に探す
         hand_position = FindChildByName(transform, "Character1_RightHand");
@@ -48,6 +51,15 @@ public class PlayerController : MonoBehaviour
     {
         // オブジェクト移動
         transform.position += _velocity * status.Speed * Time.deltaTime;
+
+        if(status.Life <= 0)
+        {
+            count_death_time -= Time.deltaTime;
+            if(count_death_time <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 
     private void OnLook(InputValue value)
@@ -127,7 +139,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Catch()
+    public void Catch()
     {
         Vector3 sphereCenter = transform.position;
 
@@ -153,33 +165,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void ApplyDamage(Ball ball)
+    public void ApplyDamage(Vector3 normal_vector, float speed)
     {
-        Vector3 ball_pos = ball.transform.position;
         UnityChanController animator = gameObject.GetComponent<UnityChanController>();
 
         status.Life--;
 
         if (animator != null)
         {
-            Vector3 delta = ball_pos - transform.position;
-            Quaternion rotation = Quaternion.LookRotation(delta, Vector3.up);
+            //  当たられた方向を向く
+            Quaternion rotation = Quaternion.LookRotation(normal_vector, Vector3.up);
             transform.rotation = rotation;
             animator.OnDamaged();
         }
 
         if (status.Life <= 0)
         {
-            Rigidbody rb = ball.GetComponent<Rigidbody>();
-            if(rb != null)
-            {
-                //  反射を予測してすでに進行方向が変わっているので-1をかけて裏返す
-                Death(rb.velocity * -1, ball.Speed);
-            }
-            else
-            {
-                Death(transform.position - ball_pos, ball.Speed);
-            }
+            //  法線の逆ベクトルを与えることで反作用的に飛ばす
+            Death(normal_vector * -1, speed);
         }
 
     }
@@ -221,11 +224,7 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(force_direction * speed * 30);
         }
 
-    }
-
-    public void Respawn()
-    {
-
+        count_death_time = death_time;
     }
 
     Transform FindChildByName(Transform parent, string name)
