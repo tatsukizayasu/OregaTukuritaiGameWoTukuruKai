@@ -9,6 +9,7 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerController : MonoBehaviour
 {
+    private Vector3 spawn_pos;
     private Vector3 _velocity;
     private PlayerStatus status;
 
@@ -31,6 +32,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        spawn_pos = transform.position;
         status = GetComponent<PlayerStatus>();
         count_death_time = 0;
 
@@ -57,7 +59,7 @@ public class PlayerController : MonoBehaviour
             count_death_time -= Time.deltaTime;
             if(count_death_time <= 0)
             {
-                Destroy(gameObject);
+                Respawn();
             }
         }
     }
@@ -214,7 +216,7 @@ public class PlayerController : MonoBehaviour
         //  “ü—Í‚ğ–³Œø‰»
         if(player_input != null)
         {
-            player_input.enabled = false;
+            //player_input.enabled = false;
         }
 
         //  ‚«”ò‚Î‚·
@@ -225,6 +227,42 @@ public class PlayerController : MonoBehaviour
         }
 
         count_death_time = death_time;
+    }
+
+    private void Respawn()
+    {
+        BoxCollider collider = GetComponent<BoxCollider>();
+        NavMeshAgent nav = GetComponent<NavMeshAgent>();
+        PlayerInput player_input = GetComponent<PlayerInput>();
+        Rigidbody rb = GetComponent<Rigidbody>();
+
+        transform.position = spawn_pos;
+
+        //  “–‚½‚è”»’è‚Ì—LŒø‰»
+        if (collider != null)
+        {
+            collider.enabled = true;
+        }
+
+        //  NavMeshAgent‚ğ—LŒø‰»
+        if (nav != null)
+        {
+            nav.enabled = true;
+        }
+
+        //  “ü—Í‚ğ—LŒø‰»
+        if (player_input != null)
+        {
+            player_input.enabled = true;
+        }
+
+        //  ‚«”ò‚Î‚·
+        if (rb != null)
+        {
+            Destroy(rb);
+        }
+
+        status.Life = 2;
     }
 
     Transform FindChildByName(Transform parent, string name)

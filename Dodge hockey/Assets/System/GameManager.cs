@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(ScoreBoard))]
@@ -19,7 +20,6 @@ public class GameManager : MonoBehaviour
     private GameObject goal2;
     private GameObject ball;
 
-    private int[] PlayerPoint = {0,0};
 
 
     private void Awake()
@@ -113,8 +113,10 @@ public class GameManager : MonoBehaviour
                 if (nav != null)
                 {
                     nav.enabled = true;
-                }
+                }             
             }
         }
     }
+    
+
 }
