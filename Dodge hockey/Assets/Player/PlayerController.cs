@@ -168,6 +168,8 @@ public class PlayerController : MonoBehaviour
                     transform.rotation = ratation;
                 }
                 ball.Find(hand_position);
+                //SE
+                se_players.PlayCatch();
             }
         }
     }
