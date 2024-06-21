@@ -11,15 +11,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject center_line;
     [SerializeField] private GameObject ball_prefab;
     [SerializeField] private GameObject goal_prefab;
+    [SerializeField] private GameObject goal_effect;
 
     private GameObject[] players = new GameObject[2];
     public GameObject[] Players { get { return players; } }
     private GameObject goal1;
     private GameObject goal2;
     private GameObject ball;
+    private GameObject goakeffect;
+
+    private SE_Player se_players;
 
     private int[] PlayerPoint = {0,0};
-
 
     private void Awake()
     {
@@ -51,10 +54,17 @@ public class GameManager : MonoBehaviour
         Ball BallComponent = ball.GetComponent<Ball>();
         BallComponent.SetVelocity(new Vector3(0.0f, 0.0f, 1.0f) * BallComponent.speed);
 
+        //Debug
+
+
+        ball.transform.position = new Vector3(3.0f, 1.6f, 12.0f);
+        BallComponent.SetVelocity(new Vector3(0.003f, 0.0f, -0.01f) * BallComponent.speed);
+
         // GoalIdentifierスクリプトを追加し、識別子を設定
         goal1.GetComponent<Goal>().GoalID = 0;
         goal2.GetComponent<Goal>().GoalID = 1;
 
+        se_players =  GetComponent<SE_Player>();
     }
 
     // Update is called once per frame
@@ -63,13 +73,19 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void Goal (GameObject goal)
+    public void Goal (GameObject goal,Vector3 locathion)
     {
         int GoalID = goal.GetComponent<Goal>().GoalID;
 
         GetComponent<ScoreBoard>().AddScore(GoalID);
+        se_players.PlayGoal();
+
+        goakeffect = Instantiate(goal_effect);
+        goakeffect.transform.position = locathion;
+        Destroy(goakeffect,3);
 
         Destroy(ball);
+
 
         //Ballプレハブのクローン作成
         ball = Instantiate(ball_prefab);

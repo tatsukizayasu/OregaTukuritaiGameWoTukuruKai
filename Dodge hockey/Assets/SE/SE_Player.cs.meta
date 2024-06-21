@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 0bacd61ec97c30243a178676b1c35169
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - Catch: {fileID: 8300000, guid: 18a8aca8dad47814ba805e1a1bb085e6, type: 3}
+  - Throw: {fileID: 8300000, guid: d9a00ce6bdfc44e47b5d9832ec19d659, type: 3}
+  - BallPlayerHit: {fileID: 8300000, guid: 26e65aa6bed822541bba71f1c3c56736, type: 3}
+  - BallHtiWall: {fileID: 8300000, guid: 86f6a8bb680c26a48b61c39463cce336, type: 3}
+  - BallHtiWall2: {fileID: 8300000, guid: b3337ac9b40adce4e85d4dcb2ceb1212, type: 3}
+  - Goal: {fileID: 8300000, guid: 985220d5308eae34196cfedca643a5a2, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

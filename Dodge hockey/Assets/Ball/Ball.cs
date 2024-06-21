@@ -10,19 +10,19 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+
     [Tooltip("îΩî≠åWêî")]
     [Range(0, 2)]
     [SerializeField] private float bounciness = 1.0f;
 
     [SerializeField] private const float ball_posY = 1.7f;
 
-    const float max_speed = 100.0f;
-
     [Tooltip("íeÇÃë¨ìx")]
     public float speed = 10.0f;
 
+    [SerializeField] public GameObject goaleffect;
 
-    
+    const float max_speed = 100.0f;
     private Rigidbody rigidbody;
     private SphereCollider sphereCollider;
     private float defaultContactOffset;
@@ -36,6 +36,7 @@ public class Ball : MonoBehaviour
     private GameObject GoalObj = null;
 
     GameManager gamemanager;
+    SE_Player se_players;
 
     public void SetVelocity(Vector3 velocity)
     {
@@ -61,6 +62,8 @@ public class Ball : MonoBehaviour
         //rigidbody.velocity = debugDirection * speed;
 
         gamemanager = FindObjectOfType<GameManager>();
+        se_players = GetComponent<SE_Player>();
+
     }
 
     private void Init()
@@ -134,9 +137,7 @@ public class Ball : MonoBehaviour
 
         if (GoalObj != null)
         {
-            
-
-            gamemanager.Goal(GoalObj);
+            gamemanager.Goal(GoalObj,gameObject.transform.position);
         }
 
     }
@@ -186,6 +187,15 @@ public class Ball : MonoBehaviour
             if (collisionTag == "Goal")
             {
                 GoalObj = hitInfo.collider.gameObject;
+
+            }
+            else if(collisionTag == "Player")
+            {
+                
+            }
+            else
+            {
+                se_players.PlayBallHtiWall();
             }
 
         }

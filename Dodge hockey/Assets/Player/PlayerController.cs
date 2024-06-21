@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 look_vector;
 
+    private SE_Player se_players;
+
     // 通知を受け取るメソッド名は「On + Action名」である必要がある
     private void OnMove(InputValue value)
     {
@@ -28,6 +30,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         status = GetComponent<PlayerStatus>();
+        se_players = GetComponent<SE_Player>();
     }
 
     private void Update()
@@ -77,6 +80,8 @@ public class PlayerController : MonoBehaviour
                 ball_pos.y = ball_y;
                 ball.Fire(ball_pos, transform.forward);
             }
+            //SE
+            se_players.PlayThrow();
         }
     }
 
@@ -96,6 +101,8 @@ public class PlayerController : MonoBehaviour
             if ((ball != null) && (!ball.CatchFlg))
             {
                 ball.Find(transform);
+                //SE
+                se_players.PlayCatch();
             }
         }
     }

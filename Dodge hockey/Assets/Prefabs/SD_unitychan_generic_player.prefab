@@ -3378,9 +3378,10 @@ GameObject:
   - component: {fileID: 5088677965687755363}
   - component: {fileID: 3480493869084125840}
   - component: {fileID: 8642104419533539002}
+  - component: {fileID: 5988225569914975803}
   m_Layer: 0
   m_Name: SD_unitychan_generic_player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3722,6 +3723,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxAngularSpeed: Infinity
   smoothTime: 0.1
+--- !u!114 &5988225569914975803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5353505442795925913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bacd61ec97c30243a178676b1c35169, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Catch: {fileID: 8300000, guid: 18a8aca8dad47814ba805e1a1bb085e6, type: 3}
+  Throw: {fileID: 8300000, guid: d9a00ce6bdfc44e47b5d9832ec19d659, type: 3}
+  BallPlayerHit: {fileID: 8300000, guid: 26e65aa6bed822541bba71f1c3c56736, type: 3}
+  BallHtiWall: {fileID: 8300000, guid: 86f6a8bb680c26a48b61c39463cce336, type: 3}
+  BallHtiWall2: {fileID: 8300000, guid: b3337ac9b40adce4e85d4dcb2ceb1212, type: 3}
+  Goal: {fileID: 8300000, guid: 985220d5308eae34196cfedca643a5a2, type: 3}
 --- !u!1 &5370476597167263663
 GameObject:
   m_ObjectHideFlags: 0
