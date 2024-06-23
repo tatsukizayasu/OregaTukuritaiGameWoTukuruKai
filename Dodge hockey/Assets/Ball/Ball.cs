@@ -267,4 +267,11 @@ public class Ball : MonoBehaviour
         
     } 
 
+    public void Block()
+    {
+        reboundVelocity = null;
+        Vector3 new_velocity = (new Vector3(0,1.7f,0) - transform.position).normalized;
+        transform.position += new_velocity;
+        rigidbody.velocity = new_velocity * speed;
+    }
 }
