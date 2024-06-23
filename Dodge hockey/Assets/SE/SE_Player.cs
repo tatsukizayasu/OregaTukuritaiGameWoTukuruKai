@@ -10,6 +10,7 @@ public class SE_Player : MonoBehaviour
     public AudioClip BallHtiWall;
     public AudioClip BallHtiWall2;
     public AudioClip Goal;
+    public AudioClip Win;
 
     private AudioSource audioSource;
 
@@ -58,6 +59,12 @@ public class SE_Player : MonoBehaviour
     public void PlayGoal()
     {
         audioSource.PlayOneShot(Goal);
+    }
+
+    //Win
+    public void PlayWin()
+    {
+        audioSource.PlayOneShot(Win);
     }
 
 

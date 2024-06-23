@@ -119,5 +119,17 @@ public class ScoreBoard : MonoBehaviour
             score[player_num]++;
         }
     }
+
+    public int GetScore(int player_num)
+    {
+        if ((0 <= player_num) && (player_num <= 1))
+        {
+            return score[player_num];
+        }
+        else
+        {
+            return 0;
+        }
+    }
 }
  

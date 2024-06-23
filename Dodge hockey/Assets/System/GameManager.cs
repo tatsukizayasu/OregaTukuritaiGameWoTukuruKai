@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(ScoreBoard))]
 public class GameManager : MonoBehaviour
@@ -23,6 +24,8 @@ public class GameManager : MonoBehaviour
     private GameObject goakeffect;
 
     private SE_Player se_players;
+
+    private int WinPoint = 10;
 
 
     private void Awake()
@@ -77,9 +80,21 @@ public class GameManager : MonoBehaviour
 
     public void Goal (GameObject goal,Vector3 locathion)
     {
+
         int GoalID = goal.GetComponent<Goal>().GoalID;
 
-        GetComponent<ScoreBoard>().AddScore(GoalID);
+        var scorboard = GetComponent<ScoreBoard>();
+
+        scorboard.AddScore(GoalID);
+
+        if(scorboard.GetScore(0) >= WinPoint)
+        {
+            SceneManager.LoadScene("result_0_win");
+        }else if(scorboard.GetScore(1) > WinPoint)
+        {
+            SceneManager.LoadScene("result_1_win");
+        }
+
         se_players.PlayGoal();
 
         goakeffect = Instantiate(goal_effect);

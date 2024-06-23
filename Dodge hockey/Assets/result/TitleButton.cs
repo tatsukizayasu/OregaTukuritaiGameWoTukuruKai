@@ -10,6 +10,9 @@ public class TitleButton : MonoBehaviour
 
     private float startTime;  // 開始時間を記録する変数
     private float invalidTime = 0.5f;
+
+    private SE_Player se_players;
+
     // 有効化
     private void OnEnable()
     {
@@ -31,12 +34,17 @@ public class TitleButton : MonoBehaviour
         // Actionを無効化する必要がある
         PadInput?.Disable();
     }
+    private void Awake()
+    {
 
+        se_players = GetComponent<SE_Player>();
+    }
     // Start is called before the first frame update
     void Start()
     {
 
         startTime = Time.time;  // ゲーム開始時刻を記録
+        se_players.PlayWin();
     }
 
     // Update is called once per frame
