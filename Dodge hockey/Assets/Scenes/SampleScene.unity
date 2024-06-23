@@ -344,6 +344,10 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
+  box_padding: 20
+  box_height: 60
+  custom_box_padding: 20
+  hp: 3
 --- !u!114 &435272167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -375,6 +379,7 @@ MonoBehaviour:
   BallHtiWall: {fileID: 8300000, guid: 86f6a8bb680c26a48b61c39463cce336, type: 3}
   BallHtiWall2: {fileID: 8300000, guid: b3337ac9b40adce4e85d4dcb2ceb1212, type: 3}
   Goal: {fileID: 8300000, guid: 985220d5308eae34196cfedca643a5a2, type: 3}
+  Win: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -653,6 +658,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8974800851897842160, guid: b1a762754c185dd418169ee91d34b40e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2029274673}
+    - targetCorrespondingSourceObject: {fileID: 8974800851897842160, guid: b1a762754c185dd418169ee91d34b40e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2029274677}
     - targetCorrespondingSourceObject: {fileID: -3359661062346023561, guid: b1a762754c185dd418169ee91d34b40e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1013087738}
@@ -687,6 +695,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2824771144617294697, guid: b1a762754c185dd418169ee91d34b40e, type: 3}
+--- !u!114 &2029274677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2029274669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb0600dde11aad04fbe8d0504c798eeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

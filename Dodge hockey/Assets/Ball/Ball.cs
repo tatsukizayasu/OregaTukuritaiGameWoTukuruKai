@@ -225,6 +225,7 @@ public class Ball : MonoBehaviour
         transform.position = parent.position;
         transform.parent = parent;
         rigidbody.velocity = Vector3.zero;
+        speed *= bounciness;
         catchFlg = true;
         sphereCollider.enabled = false;
 
