@@ -111,9 +111,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1804660347840992594}
-  - component: {fileID: 1376796851093034679}
+  - component: {fileID: 6297748403935708705}
   m_Layer: 0
-  m_Name: Title
+  m_Name: result
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -135,7 +135,7 @@ Transform:
   - {fileID: 4982926843570423139}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1376796851093034679
+--- !u!114 &6297748403935708705
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,19 +144,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 5302565996548839633}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87b801d087f5b6d49ac87a44f9af5279, type: 3}
+  m_Script: {fileID: 11500000, guid: 9df57f5ed8a45d643a73fa9cb00a4b40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PadInput:
     m_Name: Pad Input
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 49d593c2-b92b-4712-a80d-71c75ca383e4
+    m_Id: 4df62a08-a0c5-4727-a0d4-3bf03becb84c
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: 3ece2ae6-7f31-463f-8c14-c981e17888a8
+      m_Id: 9b808037-67f7-4cdf-928a-5fa2de27627e
       m_Path: <Gamepad>/buttonSouth
       m_Interactions: 
       m_Processors: 
@@ -229,7 +229,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 41e7e0bbeba9cdf479914a9520cc0da4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dc2f27a3a88dc8647b7877f0de50642f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
