@@ -11,6 +11,13 @@ public class ScoreBoard : MonoBehaviour
 
     private GameObject[] players;
 
+    public float box_padding = 20;
+    public float box_height = 60;
+    public float custom_box_padding = 20;
+    public int hp = 3;  // 表示するHPの数
+
+    private Texture2D boxTexture;  // テクスチャをメンバー変数に追加
+
     private void Awake()
     {
 
@@ -35,6 +42,8 @@ public class ScoreBoard : MonoBehaviour
         custom_style.normal.background = MakeTex(2, 2, new Color(0.25f, 0.25f, 0.25f, 0.5f)); // 半透明のグレー
 
         players = GetComponent<GameManager>().Players;
+        // ボックスの背景テクスチャを作成
+        boxTexture = MakeTex(1, 1, Color.green);  // 赤色のテクスチャを作成
     }
 
     private void Init()
@@ -61,6 +70,31 @@ public class ScoreBoard : MonoBehaviour
         // 画面の中央にラベルを配置
         Rect label_rect = new Rect((Screen.width - label_width) / 2, label_posY, label_width, label_height);
         GUI.Label(label_rect, GUI_text, custom_style);
+
+
+
+        // HPのボックスを表示
+        GUIStyle boxStyle = new GUIStyle(GUI.skin.box);
+        boxStyle.normal.background = boxTexture;
+
+        float box_width = 60;
+        float total_box_width = (box_width + box_padding) * hp;
+
+        // 左側のプレイヤーのHPボックスを表示
+        for (int i = 0; i < players[0].GetComponent<PlayerStatus>().Life; i++)
+        {
+            float posX = (Screen.width - label_width) / 2 - custom_box_padding - total_box_width + i * (box_width + box_padding);
+            Rect boxRect = new Rect(posX, label_posY, box_width, box_height);
+            GUI.Box(boxRect, GUIContent.none, boxStyle);
+        }
+
+        // 右側のプレイヤーのHPボックスを表示
+        for (int i = 0; i < players[1].GetComponent<PlayerStatus>().Life; i++)
+        {
+            float posX = (Screen.width + label_width) / 2 + custom_box_padding + i * (box_width + box_padding);
+            Rect boxRect = new Rect(posX, label_posY, box_width, box_height);
+            GUI.Box(boxRect, GUIContent.none, boxStyle);
+        }
 
     }
 
