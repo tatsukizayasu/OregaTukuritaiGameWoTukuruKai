@@ -185,6 +185,7 @@ public class PlayerController : MonoBehaviour
             //  “–‚½‚ç‚ê‚½•ûŒü‚ðŒü‚­
             Quaternion rotation = Quaternion.LookRotation(normal_vector, Vector3.up);
             transform.rotation = rotation;
+            se_players.PlayBallPlayerHit();
             animator.OnDamaged();
         }
 
