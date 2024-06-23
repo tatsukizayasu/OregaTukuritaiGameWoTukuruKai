@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6564932954214675884}
   - component: {fileID: 5453633103931174810}
   - component: {fileID: 8289720572891938411}
+  - component: {fileID: 152023881973121707}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -149,6 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounciness: 1.1
   speed: 30
+  goaleffect: {fileID: 0}
 --- !u!114 &8289720572891938411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,3 +167,21 @@ MonoBehaviour:
   speed: 18
   useContactOffset: 1
   CatchBallLocathion: {x: 0, y: 0, z: 0}
+--- !u!114 &152023881973121707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692305724288206166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bacd61ec97c30243a178676b1c35169, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Catch: {fileID: 8300000, guid: 18a8aca8dad47814ba805e1a1bb085e6, type: 3}
+  Throw: {fileID: 8300000, guid: d9a00ce6bdfc44e47b5d9832ec19d659, type: 3}
+  BallPlayerHit: {fileID: 8300000, guid: 26e65aa6bed822541bba71f1c3c56736, type: 3}
+  BallHtiWall: {fileID: 8300000, guid: 86f6a8bb680c26a48b61c39463cce336, type: 3}
+  BallHtiWall2: {fileID: 8300000, guid: b3337ac9b40adce4e85d4dcb2ceb1212, type: 3}
+  Goal: {fileID: 8300000, guid: 985220d5308eae34196cfedca643a5a2, type: 3}

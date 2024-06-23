@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private const float death_time = 3.0f;
     private float count_death_time;
 
+    private bool hasController;
+
     private SE_Player se_players;
 
     // 通知を受け取るメソッド名は「On + Action名」である必要がある
@@ -37,6 +39,7 @@ public class PlayerController : MonoBehaviour
         spawn_pos = transform.position;
         status = GetComponent<PlayerStatus>();
         count_death_time = 0;
+        hasController = true;
 
         // モデル内の"Character1_RightHandThumb4"を再帰的に探す
         hand_position = FindChildByName(transform, "Character1_RightHand");
@@ -55,9 +58,12 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         // オブジェクト移動
-        transform.position += _velocity * status.Speed * Time.deltaTime;
+        if (hasController)
+        {
+            transform.position += _velocity * status.Speed * Time.deltaTime;
+        }
 
-        if(status.Life <= 0)
+        if (status.Life <= 0)
         {
             count_death_time -= Time.deltaTime;
             if(count_death_time <= 0)
@@ -115,6 +121,8 @@ public class PlayerController : MonoBehaviour
 
     private void Throw(Transform child)
     {
+        if (!hasController) { return; }
+
         Ball ball = child.GetComponent<Ball>();
         if (ball != null)
         {
@@ -148,6 +156,8 @@ public class PlayerController : MonoBehaviour
 
     public void Catch()
     {
+        if (!hasController) { return; }
+
         Vector3 sphereCenter = transform.position;
 
         // OverlapSphereを使用して範囲内のすべてのコライダーを取得
@@ -234,6 +244,7 @@ public class PlayerController : MonoBehaviour
         }
 
         count_death_time = death_time;
+        hasController = false;
     }
 
     private void Respawn()
@@ -270,6 +281,7 @@ public class PlayerController : MonoBehaviour
         }
 
         status.Life = 2;
+        hasController = true;
     }
 
     Transform FindChildByName(Transform parent, string name)

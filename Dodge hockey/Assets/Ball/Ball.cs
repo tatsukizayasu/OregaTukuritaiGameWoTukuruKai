@@ -6,8 +6,6 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(SphereCollider))]
-
-
 public class Ball : MonoBehaviour
 {
 
@@ -38,6 +36,8 @@ public class Ball : MonoBehaviour
 
     GameManager gamemanager;
     SE_Player se_players;
+
+    int count = 0;
 
     public void SetVelocity(Vector3 velocity)
     {
@@ -95,14 +95,13 @@ public class Ball : MonoBehaviour
         }
         else
         {
-            //Debug.Log("Move");
             // 前フレームで反射していたら反射後速度を反映
             ApplyReboundVelocity();
 
             // 進行方向に衝突対象があるかどうか確認
             ProcessForwardDetection();
 
-            //減速の制限
+            //  減速の制限
             KeepConstantSpeed();
 
             
@@ -123,7 +122,7 @@ public class Ball : MonoBehaviour
     {
 
         if (reboundVelocity == null) return;
-
+                
         rigidbody.velocity = reboundVelocity.Value;
         if(max_speed < speed * bounciness )
         {
@@ -192,7 +191,7 @@ public class Ball : MonoBehaviour
             }
             else if(collisionTag == "Player")
             {
-                
+                HitPlayer(hitInfo);
             }
             else
             {
@@ -243,15 +242,18 @@ public class Ball : MonoBehaviour
         sphereCollider.enabled = true;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void HitPlayer(RaycastHit hit_info)
     {
-        if (collision == null) return;
-        GameObject hit_object = collision.gameObject;
-        PlayerController player = hit_object.GetComponent<PlayerController>();
+        PlayerController player = hit_info.collider.gameObject.GetComponent<PlayerController>();
+
+
         if (player != null)
         {
             // 法線を取得(基本1面しか当たらない処理になっているので合成を考えない)
-            Vector3 normal = collision.contacts[0].normal;
+            Vector3 normal = hit_info.normal;
+
+            count++;
+            print("hit player!" + count);
 
             if (speed > 40)
             {
@@ -263,6 +265,6 @@ public class Ball : MonoBehaviour
             }
         }
         
-    }
+    } 
 
 }

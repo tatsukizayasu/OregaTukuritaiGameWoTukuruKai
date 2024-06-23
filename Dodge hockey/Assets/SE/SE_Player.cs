@@ -43,12 +43,12 @@ public class SE_Player : MonoBehaviour
         int rand = Random.Range(0, 2);
         if (rand == 0)
         {
-            print("0");
+            //print("0");
             audioSource.PlayOneShot(BallHtiWall);
         }
         else
         {
-            print("1");
+            //print("1");
             audioSource.PlayOneShot(BallHtiWall2);
         }
         
