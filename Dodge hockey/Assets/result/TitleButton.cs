@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
-public class StartButton : MonoBehaviour
+public class TitleButton : MonoBehaviour
 {
     [SerializeField] private InputAction PadInput;
-    private float startTime;  // 開始時間を記録する変数
 
+    private float startTime;  // 開始時間を記録する変数
     private float invalidTime = 0.5f;
     // 有効化
     private void OnEnable()
@@ -35,6 +35,7 @@ public class StartButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         startTime = Time.time;  // ゲーム開始時刻を記録
     }
 
@@ -51,7 +52,7 @@ public class StartButton : MonoBehaviour
 
         if (elapsedTime >= invalidTime)
         {
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene("Title");
         }
     }
 }
