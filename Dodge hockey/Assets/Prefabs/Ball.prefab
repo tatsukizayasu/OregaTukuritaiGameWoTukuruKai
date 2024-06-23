@@ -170,6 +170,7 @@ MonoBehaviour:
   BallHtiWall: {fileID: 8300000, guid: 86f6a8bb680c26a48b61c39463cce336, type: 3}
   BallHtiWall2: {fileID: 8300000, guid: b3337ac9b40adce4e85d4dcb2ceb1212, type: 3}
   Goal: {fileID: 8300000, guid: 985220d5308eae34196cfedca643a5a2, type: 3}
+  Win: {fileID: 0}
 --- !u!114 &8289720572891938411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,3 +205,4 @@ MonoBehaviour:
   BallHtiWall: {fileID: 8300000, guid: 86f6a8bb680c26a48b61c39463cce336, type: 3}
   BallHtiWall2: {fileID: 8300000, guid: b3337ac9b40adce4e85d4dcb2ceb1212, type: 3}
   Goal: {fileID: 8300000, guid: 985220d5308eae34196cfedca643a5a2, type: 3}
+  Win: {fileID: 0}

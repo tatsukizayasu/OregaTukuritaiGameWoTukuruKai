@@ -1,5 +1,6 @@
 
 using System.Collections;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 
@@ -21,7 +22,7 @@ public class Ball : MonoBehaviour
 
     [SerializeField] public GameObject goaleffect;
 
-    const float max_speed = 100.0f;
+    const float max_speed = 120.0f;
     private Rigidbody rigidbody;
     private SphereCollider sphereCollider;
     private float defaultContactOffset;
@@ -36,6 +37,9 @@ public class Ball : MonoBehaviour
 
     GameManager gamemanager;
     SE_Player se_players;
+
+    private bool canAcceleration = true;
+    public bool CanAcceleration { get { return canAcceleration; } set {  canAcceleration = value; } }
 
     int count = 0;
 
@@ -56,11 +60,6 @@ public class Ball : MonoBehaviour
     private void Start()
     {
         Init();
-
-        //Vector3 debugDirection;
-
-        //debugDirection = new Vector3(Mathf.Cos(Mathf.Deg2Rad), Mathf.Sin(Mathf.Deg2Rad), 0f);
-        //rigidbody.velocity = debugDirection * speed;
 
         gamemanager = FindObjectOfType<GameManager>();
         se_players = GetComponent<SE_Player>();
@@ -124,14 +123,7 @@ public class Ball : MonoBehaviour
         if (reboundVelocity == null) return;
                 
         rigidbody.velocity = reboundVelocity.Value;
-        if(max_speed < speed * bounciness )
-        {
-            speed = max_speed;
-        }
-        else
-        {
-            speed *= bounciness;
-        }
+        
         reboundVelocity = null;
         canKeepSpeed = true;
 
@@ -167,20 +159,20 @@ public class Ball : MonoBehaviour
             //反射を計算
             var outVecDir = Vector3.Reflect(inVecDir, normal);
             //二次元科
-            outVecDir = new Vector3(outVecDir.x, 0.0f, outVecDir.z);
-            if (max_speed < speed * bounciness)
-            {
-                reboundVelocity = outVecDir * max_speed;
-            }
-            else
-            {
-                reboundVelocity = outVecDir * speed * bounciness;
-            }
+
+            Acceleration();
+            reboundVelocity = outVecDir * speed;
 
             // 衝突予定先に接するように速度を調整
             var adjustVelocity = distance / Time.fixedDeltaTime * direction;
             rigidbody.velocity = adjustVelocity;
             canKeepSpeed = false;
+
+            PlayerController player = hitInfo.collider.gameObject.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                HitPlayer(hitInfo);
+            }
 
             //当たったオブジェクトのタグ
             string collisionTag = hitInfo.collider.gameObject.tag;
@@ -191,12 +183,14 @@ public class Ball : MonoBehaviour
             }
             else if(collisionTag == "Player")
             {
-                HitPlayer(hitInfo);
+                
             }
             else
             {
                 se_players.PlayBallHtiWall();
             }
+
+
 
         }
     }
@@ -225,7 +219,7 @@ public class Ball : MonoBehaviour
         transform.position = parent.position;
         transform.parent = parent;
         rigidbody.velocity = Vector3.zero;
-        speed *= bounciness;
+        Acceleration();
         catchFlg = true;
         sphereCollider.enabled = false;
 
@@ -245,6 +239,7 @@ public class Ball : MonoBehaviour
 
     private void HitPlayer(RaycastHit hit_info)
     {
+        //  二重詠唱
         PlayerController player = hit_info.collider.gameObject.GetComponent<PlayerController>();
 
 
@@ -267,6 +262,23 @@ public class Ball : MonoBehaviour
         }
         
     } 
+
+    private void Acceleration()
+    {
+        if (!canAcceleration) {  }
+        
+        if (max_speed < speed * bounciness)
+        {
+            speed = max_speed;
+        }
+        else
+        {
+            speed *= bounciness;
+        }
+
+        //  相手陣地へ入るまで加速しないようにする
+        canAcceleration = false;
+    }
 
     public void Block()
     {
