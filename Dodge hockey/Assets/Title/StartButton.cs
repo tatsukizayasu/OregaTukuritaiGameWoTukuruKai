@@ -12,7 +12,7 @@ public class StartButton : MonoBehaviour
     private void OnEnable()
     {
         // Actionのコールバックを登録
-        PadInput.performed += OnStart;
+        PadInput.performed += Onstart;
 
         // InputActionを有効化
         // これをしないと入力を受け取れないことに注意
@@ -23,7 +23,7 @@ public class StartButton : MonoBehaviour
     private void OnDisable()
     {
         // Actionのコールバックを解除
-        PadInput.performed -= OnStart;
+        PadInput.performed -= Onstart;
 
         // 自身が無効化されるタイミングなどで
         // Actionを無効化する必要がある
@@ -42,7 +42,7 @@ public class StartButton : MonoBehaviour
         
     }
 
-    private void OnStart(InputAction.CallbackContext context)
+    private void Onstart(InputAction.CallbackContext context)
     {
         SceneManager.LoadScene("SampleScene");
     }
