@@ -641,6 +641,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1791021718884840133, guid: b1a762754c185dd418169ee91d34b40e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: cf2114d1da551084d8189266fa51d3a6, type: 2}
     - target: {fileID: 919132149155446097, guid: b1a762754c185dd418169ee91d34b40e, type: 3}
       propertyPath: m_Name
       value: oregatukuritaige-mu 1
