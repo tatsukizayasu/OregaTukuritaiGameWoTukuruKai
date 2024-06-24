@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
         if(scorboard.GetScore(0) >= WinPoint)
         {
             SceneManager.LoadScene("result_0_win");
-        }else if(scorboard.GetScore(1) > WinPoint)
+        }else if(scorboard.GetScore(1) >= WinPoint)
         {
             SceneManager.LoadScene("result_1_win");
         }
