@@ -74,8 +74,11 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PlayerRespawn(0);
-        PlayerRespawn(1);
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("Title");
+        }
+            
     }
 
     public void Goal (GameObject goal,Vector3 locathion)
@@ -118,36 +121,5 @@ public class GameManager : MonoBehaviour
             BallComponent.SetVelocity(new Vector3(-0.003f, 0.0f, -0.01f) * BallComponent.Speed);
         }
     }
-
-    private void PlayerRespawn(int i)
-    {
-        if(i < players.Length)
-        {
-            if (players[i] == null)
-            {
-                players[i] = Instantiate(player_prefab);
-                NavMeshAgent nav = players[i].GetComponent<NavMeshAgent>();
-                if (nav != null)
-                {
-                    nav.enabled = false;
-                }
-
-                if(i == 0)
-                {
-                    players[i].transform.position = new Vector3(-12.0f, 1.6f, 0);
-                }
-                else
-                {
-                    players[i].transform.position = new Vector3(12.0f, 1.6f, 0);
-                }
-
-                if (nav != null)
-                {
-                    nav.enabled = true;
-                }             
-            }
-        }
-    }
-    
 
 }
