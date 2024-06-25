@@ -20,11 +20,13 @@ public class PlayerController : MonoBehaviour
     private float count_death_time;
 
     private bool hasController;
+    private bool isTutorial;
+    public bool IsTutorial {  get { return isTutorial; } set { isTutorial = value; } }
 
     private SE_Player se_players;
 
     // 通知を受け取るメソッド名は「On + Action名」である必要がある
-    private void OnMove(InputValue value)
+    public void OnMove(InputValue value)
     {
         // MoveActionの入力値を取得
         Vector2 axis = value.Get<Vector2>();
@@ -60,7 +62,14 @@ public class PlayerController : MonoBehaviour
         // オブジェクト移動
         if (hasController)
         {
-            transform.position += _velocity * status.Speed * Time.deltaTime;
+            if(!isTutorial) 
+            {
+                transform.position += _velocity * status.Speed * Time.deltaTime;
+            }
+            else
+            {
+                transform.position += _velocity * status.Speed * Time.unscaledDeltaTime;
+            }
         }
 
         if (status.Life <= 0)
@@ -102,6 +111,7 @@ public class PlayerController : MonoBehaviour
             }
             status.Speed = status.default_speed;
         }
+
     }
 
     private void OnBallHandle(InputValue value)
