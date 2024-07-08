@@ -7,7 +7,8 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] private float catchRange = 5;
     public float CatchRamge { set { catchRange = value; } get { return catchRange; } }
 
-    [SerializeField] private int life = 2;
+    public int default_life = 3;
+    private int life = 3;
     public int Life { get { return life; }set { life = value; } }
 
     public float default_speed = 10.0f;

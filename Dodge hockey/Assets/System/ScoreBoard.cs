@@ -9,6 +9,8 @@ public class ScoreBoard : MonoBehaviour
 
     public GUIStyle custom_style;
 
+    [SerializeField] private Texture2D unitychan;
+
     private GameObject[] players;
 
     public float box_padding = 20;
@@ -85,7 +87,8 @@ public class ScoreBoard : MonoBehaviour
         {
             float posX = (Screen.width - label_width) / 2 - custom_box_padding - total_box_width + i * (box_width + box_padding);
             Rect boxRect = new Rect(posX, label_posY, box_width, box_height);
-            GUI.Box(boxRect, GUIContent.none, boxStyle);
+            //GUI.Box(boxRect, GUIContent.none, boxStyle);
+            GUI.DrawTexture(boxRect, unitychan);
         }
 
         // 右側のプレイヤーのHPボックスを表示
@@ -93,7 +96,8 @@ public class ScoreBoard : MonoBehaviour
         {
             float posX = (Screen.width + label_width) / 2 + custom_box_padding + i * (box_width + box_padding);
             Rect boxRect = new Rect(posX, label_posY, box_width, box_height);
-            GUI.Box(boxRect, GUIContent.none, boxStyle);
+            //GUI.Box(boxRect, GUIContent.none, boxStyle);
+            GUI.DrawTexture(boxRect, unitychan);
         }
 
     }

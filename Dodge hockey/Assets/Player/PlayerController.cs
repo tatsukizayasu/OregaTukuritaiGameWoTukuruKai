@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     private bool isTutorial;
     public bool IsTutorial {  get { return isTutorial; } set { isTutorial = value; } }
 
+    private float damaged_time;
+
     private SE_Player se_players;
 
     // 通知を受け取るメソッド名は「On + Action名」である必要がある
@@ -41,6 +43,7 @@ public class PlayerController : MonoBehaviour
         spawn_pos = transform.position;
         status = GetComponent<PlayerStatus>();
         count_death_time = 0;
+        damaged_time = 0;
         hasController = true;
 
         // モデル内の"Character1_RightHandThumb4"を再帰的に探す
@@ -59,8 +62,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        damaged_time-= Time.deltaTime;
         // オブジェクト移動
-        if (hasController)
+        if ((hasController) && (damaged_time <= 0))
         {
             if(!isTutorial) 
             {
@@ -84,6 +88,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnLook(InputValue value)
     {
+        if (damaged_time > 0) { return; }
         look_vector = value.Get<Vector2>().normalized;
 
         Transform child = hand_position.Find("Ball(Clone)");
@@ -116,6 +121,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnBallHandle(InputValue value)
     {
+        if (damaged_time > 0) { return; }
         //  ballを持っているとき投げる、持っていなければキャッチする
         Transform child = hand_position.Find("Ball(Clone)");
         if (child != null)
@@ -125,6 +131,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             Catch();
+            print(damaged_time);
         }
 
     }
@@ -215,6 +222,7 @@ public class PlayerController : MonoBehaviour
             Death(normal_vector * -1, speed);
         }
 
+        damaged_time = 0.2f;
     }
 
     private void Death(Vector3 direction, float speed)
@@ -291,7 +299,7 @@ public class PlayerController : MonoBehaviour
             Destroy(rb);
         }
 
-        status.Life = 2;
+        status.Life = status.default_life;
         hasController = true;
     }
 
@@ -313,18 +321,4 @@ public class PlayerController : MonoBehaviour
         return null;
     }
 
-    private void OnGUI()
-    {
-        // ラベルの幅と高さ
-        float label_height = 60;
-        float label_width = 150;
-        float label_posY = 50;
-
-        string GUI_text = "" + status.Life;
-
-        // 画面の中央にラベルを配置
-        Rect label_rect = new Rect((Screen.width - label_width) / 2, label_posY, label_width, label_height);
-        GUI.Label(label_rect, GUI_text );
-
-    }
 }
