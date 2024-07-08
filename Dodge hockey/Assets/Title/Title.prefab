@@ -164,6 +164,15 @@ MonoBehaviour:
       m_Action: Pad Input
       m_Flags: 0
     m_Flags: 0
+  toggleIsToPlayTutorial:
+    m_Name: Toggle Is To Play Tutorial
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 46c42e6e-aae8-4dc3-ad3a-2126b1547b65
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!1 &8863386997348117681
 GameObject:
   m_ObjectHideFlags: 0
