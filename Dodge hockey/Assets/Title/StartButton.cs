@@ -81,6 +81,5 @@ public class StartButton : MonoBehaviour
         {
             PlayerPrefs.SetInt("isToPlayTutorial", 1);
         }
-        print(PlayerPrefs.GetInt("isToPlayTutorial"));
     }
 }
