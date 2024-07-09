@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     private GameObject goal1;
     private GameObject goal2;
     private GameObject ball;
+    private GameObject tutorial_ball;
     private GameObject goakeffect;
 
     private SE_Player se_players;
@@ -33,17 +34,32 @@ public class GameManager : MonoBehaviour
         //Playerプレハブのクローン作成
         players[0] = Instantiate(player_prefab);
         players[1] = Instantiate(player_prefab);
+
+        //座標設定用にnavmeshを解除する
+        players[0].GetComponent<NavMeshAgent>().enabled = false;
+        players[1].GetComponent<NavMeshAgent>().enabled = false;
+
         //座標の設定
         players[0].transform.position = new Vector3(-12.0f, 1.6f, 0);
         players[1].transform.position = new Vector3( 12.0f, 1.6f, 0);
 
-        //Goalプレハブのクローン作成
-        goal1 = Instantiate(goal_prefab);
-        goal2 = Instantiate(goal_prefab);
-        //座標の設定
-        goal1.transform.position = new Vector3(27f, 2.7f, 0);
-        goal2.transform.position = new Vector3(-27f, 2.7f, 0);
+        //navmeshの有効化
+        players[0].GetComponent<NavMeshAgent>().enabled = true;
+        players[1].GetComponent<NavMeshAgent>().enabled = true;
 
+        if (PlayerPrefs.GetInt("isToPlayTutorial") == 0) 
+        {
+            //Goalプレハブのクローン作成
+            goal1 = Instantiate(goal_prefab);
+            goal2 = Instantiate(goal_prefab);
+            //座標の設定
+            goal1.transform.position = new Vector3(27f, 2.7f, 0);
+            goal2.transform.position = new Vector3(-27f, 2.7f, 0);
+        }
+        else
+        {
+            tutorial_ball = Instantiate(ball_prefab);
+        }
         //センターラインを設置
         Instantiate(center_line);
 
@@ -56,17 +72,26 @@ public class GameManager : MonoBehaviour
     {
         //Ballの移動方向を設定
         Ball BallComponent = ball.GetComponent<Ball>();
-        BallComponent.SetVelocity(new Vector3(0.0f, 0.0f, 1.0f) * BallComponent.Speed);
+        
+        
+        if(PlayerPrefs.GetInt("isToPlayTutorial") != 0)
+        {
+            //Ballの移動方向を設定
+            ball.transform.position = new Vector3(3.0f, 1.6f, 12.0f);
+            BallComponent.SetVelocity(new Vector3(0.003f, 0.0f, -0.01f) * BallComponent.Speed);
 
-        //Debug
+            Ball BallComponent2 = tutorial_ball.GetComponent<Ball>();
+            tutorial_ball.transform.position = new Vector3(-3.0f, 1.6f, 12.0f);
+            BallComponent2.SetVelocity(new Vector3(-0.003f, 0.0f, -0.01f) * BallComponent2.Speed);
 
-
-        ball.transform.position = new Vector3(3.0f, 1.6f, 12.0f);
-        BallComponent.SetVelocity(new Vector3(0.003f, 0.0f, -0.01f) * BallComponent.Speed);
-
-        // GoalIdentifierスクリプトを追加し、識別子を設定
-        goal1.GetComponent<Goal>().GoalID = 0;
-        goal2.GetComponent<Goal>().GoalID = 1;
+        }
+        else
+        {
+            // GoalIdentifierスクリプトを追加し、識別子を設定
+            goal1.GetComponent<Goal>().GoalID = 0;
+            goal2.GetComponent<Goal>().GoalID = 1;
+            BallComponent.SetVelocity(new Vector3(0.0f, 0.0f, -1.0f) * BallComponent.Speed);
+        }
 
         se_players =  GetComponent<SE_Player>();
     }

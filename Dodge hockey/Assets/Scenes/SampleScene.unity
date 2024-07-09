@@ -349,6 +349,7 @@ MonoBehaviour:
   box_height: 60
   custom_box_padding: 20
   hp: 3
+  test: 10
 --- !u!114 &435272167
 MonoBehaviour:
   m_ObjectHideFlags: 0

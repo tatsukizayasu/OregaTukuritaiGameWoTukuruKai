@@ -14,8 +14,17 @@ public class StartButton : MonoBehaviour
     // 有効化
     private void OnEnable()
     {
-        //  初回起動チェック(初回起動時、isToPlayTutorial に 1を入れる)
-        PlayerPrefs.SetInt("isToPlayTutorial", PlayerPrefs.GetInt("isToPlayTutorial", 1));
+        //  初回起動チェック
+        if (PlayerPrefs.GetInt("isFirst") != 0) 
+        {
+            PlayerPrefs.SetInt("isToPlayTutorial", 1);
+            PlayerPrefs.SetInt("isFirst", 0);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("isToPlayTutorial", 0);
+        }
+        
 
         // Actionのコールバックを登録
         PadInput.performed += Onstart;
@@ -65,7 +74,6 @@ public class StartButton : MonoBehaviour
             }
             else
             {
-                PlayerPrefs.SetInt("isToPlayTutorial", 0);
                 SceneManager.LoadScene("Tutorial");
             }
             

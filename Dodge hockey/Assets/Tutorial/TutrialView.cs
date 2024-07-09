@@ -19,9 +19,9 @@ public class TutrialView : MonoBehaviour
         GameObject background_camera_obj = new GameObject("BackgroundCamera");
         background_camera = background_camera_obj.AddComponent<Camera>();
         background_camera.depth = -1; // ƒƒCƒ“ƒJƒƒ‰‚æ‚è‚à‘O‚É•`‰æ‚³‚ê‚é‚æ‚¤‚É‚·‚é
+        background_camera.transform.position = new Vector3(100, 100, 100);
         //background_camera.clearFlags = CameraClearFlags.Depth; // [“x‚Ì‚İ‚ÉƒNƒŠƒA
         //background_camera.cullingMask = LayerMask.GetMask("Background"); // ”wŒiƒŒƒCƒ„[‚Ì‚İ•`‰æ
-        background_camera.transform.position = new Vector3(100, 100, 100);
 
         // ”wŒi—p‚ÌQuad‚ğì¬
         background_quad = GameObject.CreatePrimitive(PrimitiveType.Quad);

@@ -18,6 +18,8 @@ public class ScoreBoard : MonoBehaviour
     public float custom_box_padding = 20;
     public int hp = 3;  // 表示するHPの数
 
+    public int test = 10;
+
     private Texture2D boxTexture;  // テクスチャをメンバー変数に追加
 
     private void Awake()
@@ -62,6 +64,10 @@ public class ScoreBoard : MonoBehaviour
 
     private void OnGUI()
     {
+        //test = PlayerPrefs.GetInt("isToPlayTutorial");
+        ////  チュートリアル中なら描画しない
+        //if(PlayerPrefs.GetInt("isToPlayTutorial") != 0) { return; }
+
         // ラベルの幅と高さ
         float label_height = 60;
         float label_width = 150;

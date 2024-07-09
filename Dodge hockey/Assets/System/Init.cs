@@ -9,6 +9,7 @@ public class Init : MonoBehaviour
     void Start()
     {
         PlayerPrefs.DeleteAll();
+        PlayerPrefs.SetInt("isFirst", 1);
         SceneManager.LoadScene("Title");
     }
 
