@@ -20,8 +20,6 @@ public class PlayerController : MonoBehaviour
     private float count_death_time;
 
     private bool hasController;
-    private bool isTutorial;
-    public bool IsTutorial {  get { return isTutorial; } set { isTutorial = value; } }
 
     private float damaged_time;
 
@@ -65,15 +63,8 @@ public class PlayerController : MonoBehaviour
         damaged_time-= Time.deltaTime;
         // オブジェクト移動
         if ((hasController) && (damaged_time <= 0))
-        {
-            if(!isTutorial) 
-            {
-                transform.position += _velocity * status.Speed * Time.deltaTime;
-            }
-            else
-            {
-                transform.position += _velocity * status.Speed * Time.unscaledDeltaTime;
-            }
+        {            
+            transform.position += _velocity * status.Speed * Time.deltaTime;
         }
 
         if (status.Life <= 0)
@@ -148,14 +139,14 @@ public class PlayerController : MonoBehaviour
             if (look_vector != Vector2.zero)
             {
                 //  方向指定して投げる
-                ball_pos = transform.position + (new Vector3(look_vector.x, 0.0f, look_vector.y) * 2);
+                ball_pos = transform.position + (new Vector3(look_vector.x, 0.0f, look_vector.y));
                 ball_pos.y = ball_y;
                 ball.Fire(ball_pos, new Vector3(look_vector.x, 0.0f, look_vector.y));
             }
             else
             {
                 //  方向指定していないとき、向いている方向に投げる
-                ball_pos = transform.position + (new Vector3(transform.forward.x, 0.0f, transform.forward.z) * 2);
+                ball_pos = transform.position + (new Vector3(transform.forward.x, 0.0f, transform.forward.z));
                 ball_pos.y = ball_y;
                 ball.Fire(ball_pos, transform.forward);
             }
@@ -205,7 +196,10 @@ public class PlayerController : MonoBehaviour
     {
         UnityChanController animator = gameObject.GetComponent<UnityChanController>();
 
-        status.Life--;
+        if (PlayerPrefs.GetInt("isToPlayTutorial") == 0)
+        {
+            status.Life--;
+        }
 
         if (animator != null)
         {

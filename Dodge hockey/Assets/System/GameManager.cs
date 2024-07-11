@@ -14,15 +14,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject center_line;
     [SerializeField] private GameObject ball_prefab;
     [SerializeField] private GameObject goal_prefab;
-    [SerializeField] private GameObject goal_effect;
+    [SerializeField] private GameObject goal_effect_prefab;
 
     private GameObject[] players = new GameObject[2];
     public GameObject[] Players { get { return players; } }
     private GameObject goal1;
     private GameObject goal2;
-    private GameObject ball;
-    private GameObject tutorial_ball;
-    private GameObject goakeffect;
+    private GameObject[] balls = new GameObject[2];
+    private GameObject goal_effect;
 
     private SE_Player se_players;
 
@@ -47,49 +46,52 @@ public class GameManager : MonoBehaviour
         players[0].GetComponent<NavMeshAgent>().enabled = true;
         players[1].GetComponent<NavMeshAgent>().enabled = true;
 
-        if (PlayerPrefs.GetInt("isToPlayTutorial") == 0) 
-        {
-            //Goalプレハブのクローン作成
-            goal1 = Instantiate(goal_prefab);
-            goal2 = Instantiate(goal_prefab);
-            //座標の設定
-            goal1.transform.position = new Vector3(27f, 2.7f, 0);
-            goal2.transform.position = new Vector3(-27f, 2.7f, 0);
-        }
-        else
-        {
-            tutorial_ball = Instantiate(ball_prefab);
-        }
+        //Goalプレハブのクローン作成
+        goal1 = Instantiate(goal_prefab);
+        goal2 = Instantiate(goal_prefab);
+
+        //座標の設定
+        goal1.transform.position = new Vector3(28f, 2.7f, 0);
+        goal2.transform.position = new Vector3(-28f, 2.7f, 0);
+
+        // Goalスクリプトを追加し、識別子を設定
+        goal1.GetComponent<Goal>().GoalID = 0;
+        goal2.GetComponent<Goal>().GoalID = 1;
+
+        
         //センターラインを設置
         Instantiate(center_line);
 
         //Ballプレハブのクローン作成
-        ball = Instantiate (ball_prefab);
+        balls[0] = Instantiate (ball_prefab);
+        
+        if (PlayerPrefs.GetInt("isToPlayTutorial", 0) != 0)
+        {
+            //  チュートリアル中ならボールを追加する。
+            balls[1] = Instantiate(ball_prefab);
+        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
         //Ballの移動方向を設定
-        Ball BallComponent = ball.GetComponent<Ball>();
+        Ball BallComponent = balls[0].GetComponent<Ball>();
         
         
         if(PlayerPrefs.GetInt("isToPlayTutorial") != 0)
         {
             //Ballの移動方向を設定
-            ball.transform.position = new Vector3(3.0f, 1.6f, 12.0f);
+            balls[0].transform.position = new Vector3(3.0f, 1.6f, 12.0f);
             BallComponent.SetVelocity(new Vector3(0.003f, 0.0f, -0.01f) * BallComponent.Speed);
 
-            Ball BallComponent2 = tutorial_ball.GetComponent<Ball>();
-            tutorial_ball.transform.position = new Vector3(-3.0f, 1.6f, 12.0f);
-            BallComponent2.SetVelocity(new Vector3(-0.003f, 0.0f, -0.01f) * BallComponent2.Speed);
+            BallComponent = balls[1].GetComponent<Ball>();
+            balls[1].transform.position = new Vector3(-3.0f, 1.6f, 12.0f);
+            BallComponent.SetVelocity(new Vector3(-0.003f, 0.0f, -0.01f) * BallComponent.Speed);
 
         }
         else
         {
-            // GoalIdentifierスクリプトを追加し、識別子を設定
-            goal1.GetComponent<Goal>().GoalID = 0;
-            goal2.GetComponent<Goal>().GoalID = 1;
             BallComponent.SetVelocity(new Vector3(0.0f, 0.0f, -1.0f) * BallComponent.Speed);
         }
 
@@ -102,49 +104,62 @@ public class GameManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             SceneManager.LoadScene("Title");
-        }
-            
+        }            
     }
 
-    public void Goal (GameObject goal,Vector3 locathion)
+    public void Goal (GameObject goal,GameObject ball)
     {
-
         int GoalID = goal.GetComponent<Goal>().GoalID;
 
-        var scorboard = GetComponent<ScoreBoard>();
+        if(PlayerPrefs.GetInt("isToPlayTutorial") == 0)
+        { 
+            //  チュートリアル中じゃなければスコアを加算する
+            var score_board = GetComponent<ScoreBoard>();
 
-        scorboard.AddScore(GoalID);
+            score_board.AddScore(GoalID);
 
-        if(scorboard.GetScore(0) >= WinPoint)
-        {
-            SceneManager.LoadScene("result_0_win");
-        }else if(scorboard.GetScore(1) >= WinPoint)
-        {
-            SceneManager.LoadScene("result_1_win");
+            if (score_board.GetScore(0) >= WinPoint)
+            {
+                SceneManager.LoadScene("result_0_win");
+            }
+            else if (score_board.GetScore(1) >= WinPoint)
+            {
+                SceneManager.LoadScene("result_1_win");
+            }
         }
 
         se_players.PlayGoal();
 
-        goakeffect = Instantiate(goal_effect);
-        goakeffect.transform.position = locathion;
-        Destroy(goakeffect,3);
-
-        Destroy(ball);
-
-
-        //Ballプレハブのクローン作成
-        ball = Instantiate(ball_prefab);
-        Ball BallComponent = ball.GetComponent<Ball>();
-        if (GoalID == 0)
+        //  ゴールに入ったボールを検索して消す。
+        for(int i = 0; i < balls.Length;i++)
         {
-            ball.transform.position = new Vector3(3.0f, 1.6f, 12.0f);
-            BallComponent.SetVelocity(new Vector3(0.003f, 0.0f, -0.01f) * BallComponent.Speed);
+            if (balls[i] == ball)
+            {
+                goal_effect = Instantiate(goal_effect_prefab);
+                goal_effect.transform.position = balls[i].transform.position;
+                Destroy(goal_effect, 3);
+
+                Destroy(balls[i]);
+
+
+                //  リスポーンさせる                
+                balls[i] = Instantiate(ball_prefab);
+                Ball ball_component = balls[i].GetComponent<Ball>();
+
+                if (GoalID == 0)
+                {
+                    balls[i].transform.position = new Vector3(3.0f, 1.6f, 12.0f);
+                    ball_component.SetVelocity(new Vector3(0.003f, 0.0f, -0.01f) * ball_component.Speed);
+                }
+                else
+                {
+                    balls[i].transform.position = new Vector3(-3.0f, 1.6f, 12.0f);
+                    ball_component.SetVelocity(new Vector3(-0.003f, 0.0f, -0.01f) * ball_component.Speed);
+                }
+
+            }
         }
-        else
-        {
-            ball.transform.position = new Vector3(-3.0f, 1.6f, 12.0f);
-            BallComponent.SetVelocity(new Vector3(-0.003f, 0.0f, -0.01f) * BallComponent.Speed);
-        }
+
     }
 
 }

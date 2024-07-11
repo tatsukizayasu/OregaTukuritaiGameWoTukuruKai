@@ -128,7 +128,7 @@ public class Ball : MonoBehaviour
 
         if (GoalObj != null)
         {
-            gamemanager.Goal(GoalObj,gameObject.transform.position);
+            gamemanager.Goal(GoalObj,this.gameObject);
         }
 
     }
